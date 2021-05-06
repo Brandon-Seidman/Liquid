@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import Home from "./components/Home";
+import Login from "./components/Login";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
       {
         <div className="App-body">
           <Route exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
         </div>
       }
       <script src="tota11y.min.js"></script>
