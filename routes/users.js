@@ -1,5 +1,5 @@
 const express = require("express");
-const data = require("../data/");
+const data = require("../data");
 const bcrypt = require("bcrypt");
 const {
   default: ActionAssignmentReturn,
@@ -17,6 +17,39 @@ router.get("/", async (req, res) => {
   }
 });
 
+async function create(username, password) {
+  let saltRounds = 10;
+  let hash = await bcrypt.hash(password, saltRounds);
+  let newUser = await userData.addUser(username, hash);
+  return newUser;
+}
+
+router.post("/signup", async (req, res) => {
+  try {
+    const { data } = req.body;
+    const username = data.username;
+    const password = data.password;
+    if (!username || !username.trim() || !password || !password.trim()) {
+      throw "Error: No username or password received";
+    }
+    const users = await userData.getAllUsers();
+
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].username.toLowerCase() === username)
+        return res.status(200).json({ username: "taken" });
+    }
+    let user = create(username, password);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ error: "User could not be added to database" });
+    }
+    return res.status(200).json({ username: "added" });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({ error: e });
+  }
+});
 router.post("/", async (req, res) => {
   try {
     const { data } = req.body;

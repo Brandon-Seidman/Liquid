@@ -11,7 +11,6 @@ router.get("/", async (req, res) => {
       res.status(404).json({ error: "Looks like there's nothing here yet!" });
       return;
     }
-    console.log(data);
     res.status(200).json(data);
   } catch (e) {
     console.log(e);
