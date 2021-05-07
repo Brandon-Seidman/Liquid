@@ -15,22 +15,20 @@ let exportedMethods = {
     if (!comment) throw "comment not found";
     return comment;
   },
-  async addComment(commentBy, description, post, timestamp) {
+  async addComment(commentBy, description, post) {
     const commentCollection = await comments();
 
-    if (!commentBy || !description || !post || !timestamp)
+    if (!commentBy || !description || !post)
       throw "Please provide all data when creating a comment";
 
     if (typeof commentBy !== "string") throw "commentBy must be a string";
     if (typeof description !== "string") throw "description must be a string";
     if (typeof post !== "string") throw "post must be a string";
-    if (typeof timestamp !== "object") throw "timestamp must be a date";
 
     let newComment = {
       commentBy: commentBy,
       description: description,
       post: post,
-      timestamp: timestamp,
       _id: uuid.v4(),
     };
 
@@ -46,21 +44,18 @@ let exportedMethods = {
       throw `Could not delete comment with id of ${id}`;
     return true;
   },
-  async updateComment(id, commentBy, description, post, timestamp) {
+  async updateComment(id, commentBy, description, post) {
     const commentCollection = await comments();
     if (commentBy)
       if (typeof commentBy !== "string") throw "commentBy must be a string";
     if (description)
       if (typeof description !== "string") throw "description must be a string";
     if (post) if (typeof post !== "string") throw "post must be a string";
-    if (timestamp)
-      if (typeof timestamp !== "object") throw "timestamp must be a date";
 
     let updatedComment = {
       commentBy: commentBy,
       description: description,
       post: post,
-      timestamp: timestamp,
     };
     const updateInfo = await commentCollection.updateOne(
       { _id: id },
