@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory, withRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -135,6 +136,9 @@ const Signup = (props) => {
             <br />
             <Button onClick={HandleLogin}>Submit</Button>
           </form>
+          <Link className="Link" to="/login">
+            Already have an account? Login here!
+          </Link>
           {error && (
             <Typography className={classes.error}>
               Oh no! Something went wrong :(
