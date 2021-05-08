@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useHistory, withRouter } from "react-router-dom";
+import Cookies from "universal-cookie";
+
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import {
   Card,
@@ -10,7 +12,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
-
+const cookies = new Cookies();
 const useStyles = makeStyles({
   cardStyle: {
     maxWidth: 500,
@@ -55,8 +57,14 @@ const Login = (props) => {
       let login = await axios.post("http://localhost:4000/users", {
         data: { username: values.username, password: values.password },
       });
-      console.log(login);
+
+      let user = await axios.get(
+        "http://localhost:4000/users/user/" + values.username
+      );
+
       if (login.data.password === "Correct") {
+        await cookies.set("userId", user.data._id, { path: "/" });
+        console.log(cookies.get("userId"));
         history.push("/");
       } else {
         setError(true);

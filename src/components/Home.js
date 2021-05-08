@@ -72,7 +72,7 @@ const Home = (props) => {
                 })}
               </Typography>
               <Typography>Posted By: {post.user}</Typography>
-              <Typography>Posted By: {post.likes}</Typography>
+              <Typography>{post.likes} likes</Typography>
             </CardContent>
           </CardActionArea>
         </Card>
