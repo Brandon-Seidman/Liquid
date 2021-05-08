@@ -95,7 +95,7 @@ const Home = (props) => {
           alignItems="flex-start"
           spacing={2}
         >
-          <Grid className={classes.filters} item>
+          {/* <Grid className={classes.filters} item>
             <Card variant="outlined">
               <CardContent>
                 <Typography gutterBottom variant="h6" component="h3">
@@ -125,7 +125,7 @@ const Home = (props) => {
                 </FormGroup>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
           <div>Loading...</div>
         </Grid>
       </div>
@@ -140,7 +140,7 @@ const Home = (props) => {
           alignItems="flex-start"
           spacing={2}
         >
-          <Grid className={classes.filters} item>
+          {/* <Grid className={classes.filters} item>
             <Card className={classes.cardStyle} variant="outlined">
               <CardContent>
                 <Typography gutterBottom variant="h6" component="h3">
@@ -170,7 +170,7 @@ const Home = (props) => {
                 </FormGroup>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid> */}
           <Grid item className={classes.grid} spacing={1}>
             {data && card}
           </Grid>
