@@ -8,8 +8,7 @@ let exportedMethods = {
     const postList = await postCollection.find({}).toArray();
     return postList;
   },
-  // This is a fun new syntax that was brought forth in ES6, where we can define
-  // methods on an object with this shorthand!
+
   async getPostById(id) {
     const postCollection = await posts();
     const post = await postCollection.findOne({ _id: id });
@@ -39,9 +38,10 @@ let exportedMethods = {
       user: user,
       title: title,
       description: description,
-      likes: [],
+      likes: 0,
       comments: [],
       ingredients: ingredients,
+      _id: uuid.v4(),
     };
 
     const newInsertInformation = await postCollection.insertOne(newpost);
@@ -58,7 +58,7 @@ let exportedMethods = {
     return true;
   },
 
-  async updatepost(user, title, description, likes, comments, ingredients) {
+  async updatepost(id, user, title, description, likes, comments, ingredients) {
     const post = await this.getPostById(id);
     if (typeof description !== "string") throw "description must be a string";
     if (typeof user !== "string") throw "posterUsername must be a string";
@@ -76,6 +76,80 @@ let exportedMethods = {
       ingredients: ingredients,
     };
 
+    const postCollection = await posts();
+    const updateInfo = await postCollection.updateOne(
+      { _id: id },
+      { $set: postUpdateInfo }
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+      throw "Update failed";
+
+    return await this.getPostById(id);
+  },
+
+  async addComment(id, comment) {
+    const post = await this.getPostById(id);
+    if (!id) throw "Error: an id must be supplied";
+    if (!comment) throw "comment must be a string";
+    if (!post) {
+      throw "post not found";
+    }
+
+    post.comments.push(comment);
+
+    const postUpdateInfo = {
+      user: post.user,
+      title: post.title,
+      description: post.description,
+      likes: post.likes,
+      comments: post.comments,
+      ingredients: post.ingredients,
+    };
+
+    const postCollection = await posts();
+    const updateInfo = await postCollection.updateOne(
+      { _id: id },
+      { $set: postUpdateInfo }
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+      throw "Update failed";
+
+    return await this.getPostById(id);
+  },
+  async like(id) {
+    const post = await this.getPostById(id);
+    if (!id) throw "Error: an id must be supplied";
+    let points = post.likes + 1;
+    const postUpdateInfo = {
+      user: post.user,
+      title: post.title,
+      description: post.description,
+      likes: points,
+      comments: post.comments,
+      ingredients: post.ingredients,
+    };
+    const postCollection = await posts();
+    const updateInfo = await postCollection.updateOne(
+      { _id: id },
+      { $set: postUpdateInfo }
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+      throw "Update failed";
+
+    return await this.getPostById(id);
+  },
+  async unlike(id) {
+    const post = await this.getPostById(id);
+    if (!id) throw "Error: an id must be supplied";
+    let points = post.likes - 1;
+    const postUpdateInfo = {
+      user: post.user,
+      title: post.title,
+      description: post.description,
+      likes: points,
+      comments: post.comments,
+      ingredients: post.ingredients,
+    };
     const postCollection = await posts();
     const updateInfo = await postCollection.updateOne(
       { _id: id },

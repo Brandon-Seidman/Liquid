@@ -8,8 +8,35 @@ const userData = data.users;
 const router = express.Router();
 router.use(express.json());
 
-router.get("/", async (req, res) => {
+router.get("/user/:username", async (req, res) => {
   try {
+    if (!req.params.username || !req.params.username.trim()) {
+      throw "Error: No username received";
+    }
+    let data = await userData.getUserByUsername(req.params.username);
+
+    if (!data) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    if (!req.params.id || !req.params.id.trim()) {
+      throw "Error: No id received";
+    }
+    let data = await userData.getUserById(req.params.id);
+    if (!data) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json(data);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e });
@@ -23,7 +50,6 @@ async function create(username, password) {
   let newUser = await userData.addUser(username, hash);
   return newUser;
 }
-
 router.post("/signup", async (req, res) => {
   try {
     const { data } = req.body;

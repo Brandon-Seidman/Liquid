@@ -83,7 +83,7 @@ let exportedMethods = {
       friendList: friendList,
       posts: posts,
       likes: likes,
-      ponts: points,
+      points: points,
     };
 
     const userCollection = await users();
@@ -95,6 +95,113 @@ let exportedMethods = {
       throw "Update failed";
 
     return await this.getUserById(id);
+  },
+  async addPoints(id) {
+    try {
+      if (!id) throw "Error: ID must be supplied";
+      const user = await this.getUserById(id);
+      let point = user.point + 1;
+      const userUpdateInfo = {
+        username: user.username,
+        password: user.password,
+        friendList: user.friendList,
+        posts: user.posts,
+        likes: user.likes,
+        points: point,
+      };
+      const userCollection = await users();
+      const updateInfo = await userCollection.updateOne(
+        { _id: id },
+        { $set: userUpdateInfo }
+      );
+      if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+        throw "Update failed";
+
+      return await this.getUserById(id);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async subPoints(id) {
+    try {
+      if (!id) throw "Error: ID must be supplied";
+      const user = await this.getUserById(id);
+      let point = user.points - 1;
+      const userUpdateInfo = {
+        username: user.username,
+        password: user.password,
+        friendList: user.friendList,
+        posts: user.posts,
+        likes: user.likes,
+        points: point,
+      };
+      const userCollection = await users();
+      const updateInfo = await userCollection.updateOne(
+        { _id: id },
+        { $set: userUpdateInfo }
+      );
+      if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+        throw "Update failed";
+
+      return await this.getUserById(id);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  async like(id, likeId) {
+    try {
+      if (!id) throw "Error: ID must be supplied";
+
+      const user = await this.getUserById(id);
+      user.likes.push(likeId);
+      const userUpdateInfo = {
+        username: user.username,
+        password: user.password,
+        friendList: user.friendList,
+        posts: user.posts,
+        likes: user.likes,
+        points: user.points,
+      };
+      const userCollection = await users();
+      const updateInfo = await userCollection.updateOne(
+        { _id: id },
+        { $set: userUpdateInfo }
+      );
+      if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+        throw "Update failed";
+
+      return await this.getUserById(id);
+    } catch (e) {
+      console.log(e);
+    }
+  },
+
+  async unlike(id, likeId) {
+    try {
+      if (!id) throw "Error: ID must be supplied";
+      const user = await this.getUserById(id);
+      let index = user.likes.indexOf(likeId);
+      user.likes.splice(index, 1);
+      const userUpdateInfo = {
+        username: user.username,
+        password: user.password,
+        friendList: user.friendList,
+        posts: user.posts,
+        likes: user.likes,
+        points: user.points,
+      };
+      const userCollection = await users();
+      const updateInfo = await userCollection.updateOne(
+        { _id: id },
+        { $set: userUpdateInfo }
+      );
+      if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+        throw "Update failed";
+
+      return await this.getUserById(id);
+    } catch (e) {
+      console.log(e);
+    }
   },
 };
 

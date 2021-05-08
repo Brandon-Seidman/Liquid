@@ -3,6 +3,8 @@ const router = express.Router();
 router.use(express.json());
 
 const postData = require("../data/posts");
+const commentData = require("../data/comments");
+const userData = require("../data/users");
 
 router.get("/", async (req, res) => {
   try {
@@ -18,4 +20,77 @@ router.get("/", async (req, res) => {
     return;
   }
 });
+router.post("/like", async (req, res) => {
+  try {
+    const data = await postData.like(req.body.postId);
+    const user = await userData.addPoints(req.body.userId);
+    await userData.like(req.body.userId, req.body.postId);
+    if (!data) {
+      return res.status(404).json("Post not found");
+    }
+    if (!user) {
+      return res.status(404).json("User not found");
+    }
+    res.status(200);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+});
+router.post("/unlike", async (req, res) => {
+  try {
+    const data = await postData.unlike(req.body.postId);
+    const user = await userData.subPoints(req.body.userId);
+    await userData.unlike(req.body.userId, req.body.postId);
+    if (!data) {
+      return res.status(404).json("Post not found");
+    }
+    if (!user) {
+      return res.status(404).json("User not found");
+    }
+    res.status(200);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+});
+router.post("/isLiked", async (req, res) => {
+  try {
+    const data = await userData.getUserById(req.body.userId);
+    if (!data) {
+      return res.status(404).json("User not found");
+    }
+
+    for (let i = 0; i < data.likes.length; i++) {
+      if (data.likes[i] === req.body.postId) {
+        return res.status(200).json({ liked: true });
+      }
+    }
+    return res.status(200).json({ liked: false });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    let data = await postData.getPostById(req.params.id);
+
+    if (!data) {
+      res.status(404).json({ error: "Post not found" });
+    }
+    if (data.comments.length > 0) {
+      for (let i = 0; i < data.comments.length; i++) {
+        data.comments[i] = await commentData.getCommentById(data.comments[i]);
+      }
+    }
+    res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+
 module.exports = router;
