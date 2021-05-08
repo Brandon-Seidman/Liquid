@@ -25,6 +25,7 @@ router.get("/user/:username", async (req, res) => {
     return;
   }
 });
+
 router.get("/:id", async (req, res) => {
   try {
     if (!req.params.id || !req.params.id.trim()) {
