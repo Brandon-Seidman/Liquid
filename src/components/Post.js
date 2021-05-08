@@ -47,7 +47,7 @@ const Home = (props) => {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    async function getData() {
+    async function getPostData() {
       setLoading(true);
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
@@ -65,10 +65,11 @@ const Home = (props) => {
       setLiked(likeData.data.liked);
       setLoading(false);
     }
-    getData();
+
+    getPostData();
   }, []);
   useEffect(() => {
-    async function getData() {
+    async function getPostData() {
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
       );
@@ -83,7 +84,7 @@ const Home = (props) => {
       setData(newData);
       setLiked(likeData.data.liked);
     }
-    getData();
+    getPostData();
   }, [liked]);
 
   const buildCard = (comment) => {
@@ -149,7 +150,7 @@ const Home = (props) => {
                         event.preventDefault();
                         setLiked(false);
                         await axios.post("http://localhost:4000/posts/unlike", {
-                          userId: cookies.get("userId"),
+                          userId: data.data.user,
                           postId: props.match.params.id,
                         });
                       }}
@@ -161,7 +162,7 @@ const Home = (props) => {
                         event.preventDefault();
                         setLiked(true);
                         await axios.post("http://localhost:4000/posts/like", {
-                          userId: cookies.get("userId"),
+                          userId: data.data.user,
                           postId: props.match.params.id,
                         });
                       }}
