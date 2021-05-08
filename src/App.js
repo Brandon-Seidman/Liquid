@@ -47,10 +47,10 @@ const App = () => {
         <br />
         {
           <div className="App-body">
-            <Route exact path="/my-page" component={MyPage} />
             <Route exact path="/" component={Home} />
             <Route exact path="/login" component={Home} />
             <Route exact path="/signup" component={Home} />
+            <Route exact path="/my-page" component={MyPage} />
             <Route exact path="/:id" component={Post} />
           </div>
         }

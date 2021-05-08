@@ -59,7 +59,6 @@ const Home = (props) => {
       let userData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
-      console.log("likes", newData.data.likes);
 
       setData(newData);
       setLiked(likeData.data.liked);
@@ -80,7 +79,7 @@ const Home = (props) => {
       let userData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
-      console.log("likes", newData.data.likes);
+      console.log("likes", newData.data);
       setData(newData);
       setLiked(likeData.data.liked);
     }
@@ -150,7 +149,8 @@ const Home = (props) => {
                         event.preventDefault();
                         setLiked(false);
                         await axios.post("http://localhost:4000/posts/unlike", {
-                          userId: data.data.user,
+                          username: data.data.user,
+                          userId: cookies.get("userId"),
                           postId: props.match.params.id,
                         });
                       }}
@@ -162,7 +162,8 @@ const Home = (props) => {
                         event.preventDefault();
                         setLiked(true);
                         await axios.post("http://localhost:4000/posts/like", {
-                          userId: data.data.user,
+                          username: data.data.user,
+                          userId: cookies.get("userId"),
                           postId: props.match.params.id,
                         });
                       }}

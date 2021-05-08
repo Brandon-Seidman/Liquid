@@ -24,10 +24,10 @@ router.get("/", async (req, res) => {
 
 router.post("/like", async (req, res) => {
   try {
-    const username = await userData.getUserByUsername(req.body.userId);
+    const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.like(req.body.postId);
     const user = await userData.addPoints(username._id);
-    await userData.like(username._id, req.body.postId);
+    await userData.like(req.body.userId, req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");
@@ -43,10 +43,10 @@ router.post("/like", async (req, res) => {
 });
 router.post("/unlike", async (req, res) => {
   try {
-    const username = await userData.getUserByUsername(req.body.userId);
+    const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.unlike(req.body.postId);
     const user = await userData.subPoints(username._id);
-    await userData.unlike(username._id, req.body.postId);
+    await userData.unlike(req.body.userId, req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");
@@ -68,11 +68,10 @@ router.post("/liked", async (req, res) => {
     }
 
     let liked = [];
-    if (data.likes.lenth > 0) {
-      for (let i = 0; i < data.likes.length; i++) {
-        const newData = await postData.getPostById(data.likes[i]);
-        liked.push(newData);
-      }
+
+    for (let i = 0; i < data.likes.length; i++) {
+      const newData = await postData.getPostById(data.likes[i]);
+      liked.push(newData);
     }
 
     return res.status(200).json(liked);
