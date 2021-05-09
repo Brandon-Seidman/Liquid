@@ -1,5 +1,8 @@
 import React from "react";
 import "./App.css";
+//import Navbar from "./Navbar";
+import TweetFeed from "./components/TweetFeed";
+import RuleList from "./components/RuleList";
 import Home from "./components/Home";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -21,6 +24,8 @@ const App = () => {
       {
         <div className="App-body">
           <Route exact path="/" component={Home} />
+		  <Route exact path="/rules" component={RuleList} />
+		  <Route exact path="/tweets" component={TweetFeed} />
         </div>
       }
       <script src="tota11y.min.js"></script>
