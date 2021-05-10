@@ -4,7 +4,9 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import { CardActionArea } from "@material-ui/core";
 import Post from "./components/Post";
+//import Store from "./components/Store";
 import Signup from "./components/Signup";
+import MyPage from "./components/MyPage";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -31,10 +33,17 @@ const App = () => {
               onClick={(event) => {
                 event.preventDefault();
                 cookies.remove("userId", { path: "/" });
+                window.location.href = "/";
                 console.log("cookie removed!");
               }}
             >
-              <Link to="/login">Logout</Link>
+              <Link to="/"> Logout</Link>
+            </CardActionArea>
+            <CardActionArea>
+              <Link to="/my-page">My Page</Link>
+            </CardActionArea>
+            <CardActionArea>
+              <Link to="/store">Liquid Store</Link>
             </CardActionArea>
           </header>
         </div>
@@ -42,10 +51,13 @@ const App = () => {
         <br />
         {
           <div className="App-body">
+            <Route exact path="/post/:id" component={Post} />
+            <Route exact path="/login" component={Home} />
+            <Route exact path="/signup" component={Home} />
+            <Route exact path="/my-page" component={MyPage} />
+            {/* <Route exact path="/store" component={Store} /> */}
+
             <Route exact path="/" component={Home} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/signup" component={Signup} />
-            <Route exact path="/:id" component={Post} />
           </div>
         }
         <script src="tota11y.min.js"></script>
@@ -72,11 +84,9 @@ const App = () => {
         <br />
         {
           <div className="App-body">
-            <Route exact path="/home" component={Home} />
             <Route exact path="/" component={Login} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
-            <Route exact path="/:id" component={Post} />
           </div>
         }
         <script src="tota11y.min.js"></script>

@@ -47,7 +47,7 @@ const Home = (props) => {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    async function getData() {
+    async function getPostData() {
       setLoading(true);
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
@@ -59,16 +59,16 @@ const Home = (props) => {
       let userData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
-      console.log("likes", newData.data.likes);
 
       setData(newData);
       setLiked(likeData.data.liked);
       setLoading(false);
     }
-    getData();
+
+    getPostData();
   }, []);
   useEffect(() => {
-    async function getData() {
+    async function getPostData() {
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
       );
@@ -79,11 +79,11 @@ const Home = (props) => {
       let userData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
-      console.log("likes", newData.data.likes);
+      console.log("likes", newData.data);
       setData(newData);
       setLiked(likeData.data.liked);
     }
-    getData();
+    getPostData();
   }, [liked]);
 
   const buildCard = (comment) => {
@@ -149,6 +149,7 @@ const Home = (props) => {
                         event.preventDefault();
                         setLiked(false);
                         await axios.post("http://localhost:4000/posts/unlike", {
+                          username: data.data.user,
                           userId: cookies.get("userId"),
                           postId: props.match.params.id,
                         });
@@ -161,6 +162,7 @@ const Home = (props) => {
                         event.preventDefault();
                         setLiked(true);
                         await axios.post("http://localhost:4000/posts/like", {
+                          username: data.data.user,
                           userId: cookies.get("userId"),
                           postId: props.match.params.id,
                         });

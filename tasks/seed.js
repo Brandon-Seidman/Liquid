@@ -76,7 +76,7 @@ async function main() {
     ["Lillet Blanc", "Plymouth Gin", "Absolut Elyx Vodka"]
   );
   let brandonPost = await postData.addpost(
-    "branyman",
+    "brandyman",
     "Easy Whiskey Sour",
     "Shake up all of the ingredients in a cocktail shaker with ice! 4 Tablespoons bourbon whiskey, 2 tablespoons fresh lemon juice, 1 and a half tablespoons pure maple syrup, garnish with orange peel and cockatil cherry, and finally ice for serving",
     ["Maple Syrup", "Whiskey", "Ice", "Orange Peel", "Lemon Juice"]

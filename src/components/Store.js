@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     flexDirection: "row",
   },
 });
-const Home = (props) => {
+const Store = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -73,8 +73,7 @@ const Home = (props) => {
                   return <li>{ingredients}</li>;
                 })}
               </Typography>
-              <Typography>Posted By: {post.user}</Typography>
-              <Typography>{post.likes} likes</Typography>
+              <Typography>Posted By: Liquid Guru</Typography>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -97,37 +96,6 @@ const Home = (props) => {
           alignItems="flex-start"
           spacing={2}
         >
-          {/* <Grid className={classes.filters} item>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h3">
-                  Filter By:
-                </Typography>
-                <FormGroup>
-                  <FormControlLabel
-                    label="Alcoholic"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Non-Alcoholic"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Smoothies"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Dairy Free"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                </FormGroup>
-              </CardContent>
-            </Card>
-          </Grid> */}
           <div>Loading...</div>
         </Grid>
       </div>
@@ -142,37 +110,6 @@ const Home = (props) => {
           alignItems="flex-start"
           spacing={2}
         >
-          {/* <Grid className={classes.filters} item>
-            <Card className={classes.cardStyle} variant="outlined">
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h3">
-                  Filter By:
-                </Typography>
-                <FormGroup>
-                  <FormControlLabel
-                    label="Alcoholic"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Non-Alcoholic"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Smoothies"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Dairy Free"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                </FormGroup>
-              </CardContent>
-            </Card>
-          </Grid> */}
           <Grid item className={classes.grid} spacing={1}>
             {data && card}
           </Grid>
@@ -181,4 +118,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Store;

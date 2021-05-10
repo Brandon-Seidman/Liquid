@@ -13,6 +13,7 @@ router.get("/", async (req, res) => {
       res.status(404).json({ error: "Looks like there's nothing here yet!" });
       return;
     }
+
     res.status(200).json(data);
   } catch (e) {
     console.log(e);
@@ -20,11 +21,14 @@ router.get("/", async (req, res) => {
     return;
   }
 });
+
 router.post("/like", async (req, res) => {
   try {
+    const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.like(req.body.postId);
-    const user = await userData.addPoints(req.body.userId);
+    const user = await userData.addPoints(username._id);
     await userData.like(req.body.userId, req.body.postId);
+
     if (!data) {
       return res.status(404).json("Post not found");
     }
@@ -39,9 +43,11 @@ router.post("/like", async (req, res) => {
 });
 router.post("/unlike", async (req, res) => {
   try {
+    const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.unlike(req.body.postId);
-    const user = await userData.subPoints(req.body.userId);
+    const user = await userData.subPoints(username._id);
     await userData.unlike(req.body.userId, req.body.postId);
+
     if (!data) {
       return res.status(404).json("Post not found");
     }
@@ -54,6 +60,27 @@ router.post("/unlike", async (req, res) => {
     res.status(500).json({ error: e });
   }
 });
+router.post("/liked", async (req, res) => {
+  try {
+    const data = await userData.getUserById(req.body.userId);
+    if (!data) {
+      return res.status(404).json("User not found");
+    }
+
+    let liked = [];
+
+    for (let i = 0; i < data.likes.length; i++) {
+      const newData = await postData.getPostById(data.likes[i]);
+      liked.push(newData);
+    }
+
+    return res.status(200).json(liked);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
+  }
+});
+
 router.post("/isLiked", async (req, res) => {
   try {
     const data = await userData.getUserById(req.body.userId);
@@ -75,6 +102,9 @@ router.post("/isLiked", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
+    if (req.params.id === "my-page") {
+      return res.status(200);
+    }
     let data = await postData.getPostById(req.params.id);
 
     if (!data) {

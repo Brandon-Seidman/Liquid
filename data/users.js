@@ -38,7 +38,7 @@ let exportedMethods = {
       friendList: [],
       posts: [],
       likes: [],
-      points: 0,
+      points: 10,
       _id: uuid.v4(),
     };
 
@@ -100,7 +100,7 @@ let exportedMethods = {
     try {
       if (!id) throw "Error: ID must be supplied";
       const user = await this.getUserById(id);
-      let point = user.point + 1;
+      let point = user.points + 1;
       const userUpdateInfo = {
         username: user.username,
         password: user.password,
