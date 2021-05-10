@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 import {
   Card,
   CardActionArea,
   CardContent,
   CardHeader,
+  Button,
   Grid,
   Typography,
   FormGroup,
@@ -16,6 +18,7 @@ import {
   FormControlLabel,
   TableBody,
 } from "@material-ui/core";
+import ActionSettingsInputAntenna from "material-ui/svg-icons/action/settings-input-antenna";
 
 const useStyles = makeStyles({
   cardStyle: {
@@ -35,31 +38,49 @@ const useStyles = makeStyles({
     flexGrow: 2,
     flexDirection: "row",
   },
+  error: {
+    color: "red",
+  },
 });
-const Store = (props) => {
+const cookies = new Cookies();
+
+const Home = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [unlock, setUnlock] = useState(false);
+  const [error, setError] = useState(false);
   let history = useHistory();
 
   useEffect(() => {
     async function getData() {
       setLoading(true);
-      let newData = await axios.get("http://localhost:4000/posts");
-      console.log(newData.data);
+      let newData = await axios.get("http://localhost:4000/posts/lockedPosts");
+      console.log(newData);
       setData(newData);
       setLoading(false);
     }
     getData();
-  }, []);
+  }, [, unlock]);
 
+  async function handleUnlock(id) {
+    setUnlock(false);
+    setError(false);
+    let unlockedData = await axios.post(
+      "http://localhost:4000/posts/lockedPosts/unlock/",
+      { userId: cookies.get("userId"), postId: id }
+    );
+    if (unlockedData.data.response === "success") {
+      setUnlock(true);
+    } else if (unlockedData.data.response === "insufficient funds") {
+      setError(true);
+    }
+  }
   const buildCard = (post) => {
     return (
       <Grid item>
-        <Card variant="outlined">
-          <CardActionArea
-            onClick={(event) => history.push("/post/" + post._id)}
-          >
+        {post.unlocked && (
+          <Card variant="outlined">
             <CardContent>
               <Typography gutterBottom variant="h3" component="h2">
                 {post.title}
@@ -75,17 +96,40 @@ const Store = (props) => {
               </Typography>
               <Typography>Posted By: Liquid Guru</Typography>
             </CardContent>
-          </CardActionArea>
-        </Card>
+          </Card>
+        )}
+        {!post.unlocked && (
+          <Card variant="outlined">
+            <CardContent>
+              <Typography gutterBottom variant="h3" component="h2">
+                {post.title}
+              </Typography>
+              <Typography gutterBottom variant="h6" component="h3">
+                {post.points}
+              </Typography>
+              <Button onClick={() => handleUnlock(post._id)}>
+                Unlock Now!
+              </Button>
+              {error && (
+                <Typography className={classes.error}>
+                  Insufficient funds :({" "}
+                </Typography>
+              )}
+              <Typography>Posted By: Liquid Guru</Typography>
+            </CardContent>
+          </Card>
+        )}
       </Grid>
     );
   };
+
   let card = {};
   if (data && data.data) {
     card = data.data.map((posts) => {
       return buildCard(posts);
     });
   }
+
   if (loading) {
     return (
       <div className="postsBody">
@@ -118,4 +162,4 @@ const Store = (props) => {
     );
   }
 };
-export default Store;
+export default Home;

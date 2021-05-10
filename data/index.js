@@ -1,11 +1,11 @@
 const postData = require("./posts");
 const userData = require("./users");
 const commentData = require("./comments");
-const unlockedPostData = require("./unlockedPosts");
+const lockedPostData = require("./lockedPosts");
 
 module.exports = {
   posts: postData,
   comments: commentData,
   users: userData,
-  lockedPosts: unlockedPostData,
+  lockedPosts: lockedPostData,
 };

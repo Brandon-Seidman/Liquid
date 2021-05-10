@@ -122,11 +122,11 @@ let exportedMethods = {
       console.log(e);
     }
   },
-  async subPoints(id) {
+  async subPoints(id, amount) {
     try {
       if (!id) throw "Error: ID must be supplied";
       const user = await this.getUserById(id);
-      let point = user.points - 1;
+      let point = user.points - amount;
       const userUpdateInfo = {
         username: user.username,
         password: user.password,
