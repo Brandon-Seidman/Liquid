@@ -4,7 +4,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import { CardActionArea } from "@material-ui/core";
 import Post from "./components/Post";
-import Store from "./components/Store";
+//import Store from "./components/Store";
 import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -55,7 +55,7 @@ const App = () => {
             <Route exact path="/login" component={Home} />
             <Route exact path="/signup" component={Home} />
             <Route exact path="/my-page" component={MyPage} />
-            <Route exact path="/store" component={Store} />
+            {/* <Route exact path="/store" component={Store} /> */}
 
             <Route exact path="/" component={Home} />
           </div>

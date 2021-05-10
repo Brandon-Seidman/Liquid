@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     flexDirection: "row",
   },
 });
-const Home = (props) => {
+const Store = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -118,4 +118,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Store;
