@@ -17,4 +17,5 @@ module.exports = {
   posts: getCollectionFn("solids"),
   comments: getCollectionFn("comments"),
   users: getCollectionFn("users"),
+  lockedPosts: getCollectionFn("lockedPosts"),
 };

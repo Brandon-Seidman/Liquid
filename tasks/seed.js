@@ -4,6 +4,7 @@ const data = require("../data");
 const userData = data.users;
 const postData = data.posts;
 const commentData = data.comments;
+const lockedPostData = data.lockedPosts;
 const bcrypt = require("bcrypt");
 
 async function main() {
@@ -87,6 +88,18 @@ async function main() {
     "uuuuhh... this slaps?"
   );
   await postData.addComment(brandonPost._id, comment5._id);
+
+  await lockedPostData.addpost(
+    "Watermelon Refresher",
+    "In a medium saucepan, heat the water and sugar over medium heat until the sugar is completely dissolved. Add the ginger and basil, and immediately remove from heat, allowing it to steep until cool. Strain the syrup into a jar through a fine-mesh strainer and refrigerate. Yields approximately one cup of syrup, and will keep refrigerated for two to three weeks. https://www.stylemepretty.com/2014/06/04/signature-cocktail-summer-watermelon-refresher/",
+    [
+      "Hangar one vodka",
+      "Watermelon-strawberry juice",
+      "Basil-ginger Syrup",
+      "lime juice",
+    ],
+    11
+  );
 }
 
 main();

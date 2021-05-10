@@ -5,6 +5,7 @@ router.use(express.json());
 const postData = require("../data/posts");
 const commentData = require("../data/comments");
 const userData = require("../data/users");
+const lockedPostData = require("../data/lockedPosts");
 
 router.get("/", async (req, res) => {
   try {
@@ -19,6 +20,42 @@ router.get("/", async (req, res) => {
     console.log(e);
     res.status(500).json({ error: e });
     return;
+  }
+});
+router.get("/lockedPosts", async (req, res) => {
+  try {
+    let data = await lockedPostData.getAllPosts();
+    console.log(data);
+    if (data.length === 0) {
+      res.status(404).json({ error: "Looks like there's nothing here yet!" });
+      return;
+    }
+
+    res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+router.post("/lockedPosts/unlock/", async (req, res) => {
+  try {
+    let data = await lockedPostData.unlockPost(req.body.postId);
+    if (data.length === 0) {
+      res.status(404).json({ error: "I couldn't find that post for you :(" });
+      return;
+    }
+    let userData2 = await userData.getUserById(req.body.userId);
+    if (userData2.points < data.points) {
+      return res.status(200).json({ response: "insufficient funds" });
+    } else {
+      await userData.subPoints(req.body.userId, data.points);
+      return res.status(200).json({ response: "success" });
+    }
+    res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).status({ error: e });
   }
 });
 
@@ -45,7 +82,7 @@ router.post("/unlike", async (req, res) => {
   try {
     const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.unlike(req.body.postId);
-    const user = await userData.subPoints(username._id);
+    const user = await userData.subPoints(username._id, 1);
     await userData.unlike(req.body.userId, req.body.postId);
 
     if (!data) {
