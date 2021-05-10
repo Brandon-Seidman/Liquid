@@ -38,6 +38,9 @@ const useStyles = makeStyles({
     flexGrow: 2,
     flexDirection: "row",
   },
+  error: {
+    color: "red",
+  },
 });
 const cookies = new Cookies();
 
@@ -46,6 +49,7 @@ const Home = (props) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [unlock, setUnlock] = useState(false);
+  const [error, setError] = useState(false);
   let history = useHistory();
 
   useEffect(() => {
@@ -61,36 +65,37 @@ const Home = (props) => {
 
   async function handleUnlock(id) {
     setUnlock(false);
+    setError(false);
     let unlockedData = await axios.post(
       "http://localhost:4000/posts/lockedPosts/unlock/",
       { userId: cookies.get("userId"), postId: id }
     );
-    setUnlock(true);
+    if (unlockedData.data.response === "success") {
+      setUnlock(true);
+    } else if (unlockedData.data.response === "insufficient funds") {
+      setError(true);
+    }
   }
   const buildCard = (post) => {
     return (
       <Grid item>
         {post.unlocked && (
           <Card variant="outlined">
-            <CardActionArea
-              onClick={(event) => history.push("/post/" + post._id)}
-            >
-              <CardContent>
-                <Typography gutterBottom variant="h3" component="h2">
-                  {post.title}
-                </Typography>
-                <Typography gutterBottom variant="h6" component="h3">
-                  {post.description}
-                </Typography>
-                <Typography>
-                  Ingredients Needed:
-                  {post.ingredients.map((ingredients) => {
-                    return <li>{ingredients}</li>;
-                  })}
-                </Typography>
-                <Typography>Posted By: Liquid Guru</Typography>
-              </CardContent>
-            </CardActionArea>
+            <CardContent>
+              <Typography gutterBottom variant="h3" component="h2">
+                {post.title}
+              </Typography>
+              <Typography gutterBottom variant="h6" component="h3">
+                {post.description}
+              </Typography>
+              <Typography>
+                Ingredients Needed:
+                {post.ingredients.map((ingredients) => {
+                  return <li>{ingredients}</li>;
+                })}
+              </Typography>
+              <Typography>Posted By: Liquid Guru</Typography>
+            </CardContent>
           </Card>
         )}
         {!post.unlocked && (
@@ -105,6 +110,11 @@ const Home = (props) => {
               <Button onClick={() => handleUnlock(post._id)}>
                 Unlock Now!
               </Button>
+              {error && (
+                <Typography className={classes.error}>
+                  Insufficient funds :({" "}
+                </Typography>
+              )}
               <Typography>Posted By: Liquid Guru</Typography>
             </CardContent>
           </Card>

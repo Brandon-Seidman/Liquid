@@ -40,15 +40,20 @@ router.get("/lockedPosts", async (req, res) => {
 });
 router.post("/lockedPosts/unlock/", async (req, res) => {
   try {
-    let data = await lockedPostData.unlockPost(req.body.postId);
+    let userData2 = await userData.getUserById(req.body.userId);
+    let data = await lockedPostData.getPostById(req.body.postId);
     if (data.length === 0) {
       res.status(404).json({ error: "I couldn't find that post for you :(" });
       return;
     }
-    let userData2 = await userData.getUserById(req.body.userId);
     if (userData2.points < data.points) {
       return res.status(200).json({ response: "insufficient funds" });
     } else {
+      let data2 = await lockedPostData.unlockPost(req.body.postId);
+      if (data2.length === 0) {
+        res.status(404).json({ error: "I couldn't find that post for you :(" });
+        return;
+      }
       await userData.subPoints(req.body.userId, data.points);
       return res.status(200).json({ response: "success" });
     }
