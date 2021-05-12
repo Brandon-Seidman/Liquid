@@ -165,4 +165,60 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/post", async (req, res) => {
+  if (typeof req.body.description !== "string") {
+    res.status(400).json({error: "description must be a string"});
+    return;
+  }
+  if (!req.body.description.trim()) {
+    res.status(400).json({error: "description must not be empty"});
+    return;
+  }
+  if (typeof user !== "string") {
+    res.status(400).json({error: "posterUsername must be a string"});
+    return;
+  }
+  try {
+    await userData.getUserByUsername(req.body.userId);
+  } catch (e) {
+    if (e === "User not found") res.status(400).json({error: "invalid userId"});
+    else res.status(500).json({error: e});
+    return;
+  }
+  if (typeof req.body.title !== "string") {
+    res.status(400).json({error: "title must be a string"});
+    return;
+  }
+  if (!req.body.title.trim()) {
+    res.status(400).json({error: "title must not be empty"});
+    return;
+  }
+  if (!Array.isArray(req.body.ingredients)) {
+    res.status(400).json({error: "ingredients must be a array"});
+    return;
+  }
+  if (req.body.ingredients.length === 0) {
+    res.status(400).json({error: "ingredients must not be empty"});
+    return;
+  }
+  for (let ingredient of req.body.ingredients) {
+    if (typeof ingredient !== "string") {
+      res.status(400).json({error: "ingredients must all be strings"});
+      return;
+    }
+    if (!ingredient.trim()) {
+      res.status(400).json({error: "ingredients must not be empty"});
+      return;
+    }
+  }
+  try {
+    const repsonse = await postData.addpost(req.body.userId, req.body.title, req.body.description, req.body.ingredients);
+    res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+
 module.exports = router;
