@@ -165,4 +165,104 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/post", async (req, res) => {
+  if (typeof req.body.description !== "string") {
+    res.status(400).json({error: "description must be a string"});
+    return;
+  }
+  if (!req.body.description.trim()) {
+    res.status(400).json({error: "description must not be empty"});
+    return;
+  }
+  if (typeof req.body.userId !== "string") {
+    res.status(400).json({error: "posterUsername must be a string"});
+    return;
+  }
+  let user;
+  try {
+    user = await userData.getUserById(req.body.userId);
+  } catch (e) {
+    if (e === "User not found") res.status(400).json({error: "invalid userId"});
+    else res.status(500).json({error: e});
+    return;
+  }
+  if (typeof req.body.title !== "string") {
+    res.status(400).json({error: "title must be a string"});
+    return;
+  }
+  if (!req.body.title.trim()) {
+    res.status(400).json({error: "title must not be empty"});
+    return;
+  }
+  if (!Array.isArray(req.body.ingredients)) {
+    res.status(400).json({error: "ingredients must be a array"});
+    return;
+  }
+  if (req.body.ingredients.length === 0) {
+    res.status(400).json({error: "ingredients must not be empty"});
+    return;
+  }
+  for (let ingredient of req.body.ingredients) {
+    if (typeof ingredient !== "string") {
+      res.status(400).json({error: "ingredients must all be strings"});
+      return;
+    }
+    if (!ingredient.trim()) {
+      res.status(400).json({error: "ingredients must not be empty"});
+      return;
+    }
+  }
+  try {
+    const response = await postData.addpost(user.username, req.body.title, req.body.description, req.body.ingredients);
+    res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+
+router.post("/comment/:id", async (req, res) => {
+  try {
+    await postData.getPostById(req.params.id);
+  } catch (e) {
+    if (e === "post not found") res.status(404).json({error: "post not found"});
+    else res.status(500).json({error: "could not load post"});
+  }
+  if (typeof req.body.commentBy !== "string") {
+    res.status(400).json({error: "username must be a string"});
+    return;
+  }
+  try {
+    await userData.getUserByUsername(req.body.commentBy);
+  } catch (e) {
+    if (e === "User not found") res.status(400).json({error: "invalid userId"});
+    else res.status(500).json({error: e});
+  }
+  if (typeof req.body.title !== "string") {
+    res.status(400).json({error: "comment title must be a string"});
+    return;
+  }
+  if (!req.body.title.trim()) {
+    res.status(400).json({error: "comment title must not be empty"});
+    return;
+  }
+  if (typeof req.body.description !== "string") {
+    res.status(400).json({error: "comment must be a string"});
+    return;
+  }
+  if (!req.body.description.trim()) {
+    res.status(400).json({error: "comment must not be empty"});
+    return;
+  }
+  try {
+    const comment = await commentData.addComment(req.body.commentBy, req.body.description, req.body.title);
+    const response = await postData.addComment(req.params.id, comment._id);
+    res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+});
+
 module.exports = router;
