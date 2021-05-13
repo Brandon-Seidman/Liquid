@@ -7,6 +7,7 @@ import Post from "./components/Post";
 import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
 import Store from "./components/Store";
+import PostForm from "./components/PostForm";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -45,6 +46,9 @@ const App = () => {
             <CardActionArea>
               <Link to="/store">Liquid Store</Link>
             </CardActionArea>
+            <CardActionArea>
+              <Link to="/post">Post</Link>
+            </CardActionArea>
           </header>
         </div>
         <br />
@@ -56,6 +60,7 @@ const App = () => {
             <Route exact path="/signup" component={Home} />
             <Route exact path="/my-page" component={MyPage} />
             <Route exact path="/store" component={Store} />
+            <Route exact path="/post" component={PostForm} />
 
             <Route exact path="/" component={Home} />
           </div>

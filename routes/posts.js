@@ -174,12 +174,13 @@ router.post("/post", async (req, res) => {
     res.status(400).json({error: "description must not be empty"});
     return;
   }
-  if (typeof user !== "string") {
+  if (typeof req.body.userId !== "string") {
     res.status(400).json({error: "posterUsername must be a string"});
     return;
   }
+  let user;
   try {
-    await userData.getUserByUsername(req.body.userId);
+    user = await userData.getUserById(req.body.userId);
   } catch (e) {
     if (e === "User not found") res.status(400).json({error: "invalid userId"});
     else res.status(500).json({error: e});
@@ -212,7 +213,7 @@ router.post("/post", async (req, res) => {
     }
   }
   try {
-    const repsonse = await postData.addpost(req.body.userId, req.body.title, req.body.description, req.body.ingredients);
+    const response = await postData.addpost(user.username, req.body.title, req.body.description, req.body.ingredients);
     res.status(200).json(response);
   } catch (e) {
     console.log(e);
