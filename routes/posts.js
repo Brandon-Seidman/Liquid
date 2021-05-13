@@ -222,4 +222,51 @@ router.post("/post", async (req, res) => {
   }
 });
 
+router.post("/comment", async (req, res) => {
+  if (typeof req.body.postId !== "string") {
+    res.status(400).json({error: "id must be a string"});
+    return;
+  }
+  try {
+    await postData.getPostById(req.body.postId);
+  } catch (e) {
+    if (e === "post not found") res.status(404).json({error: "post not found"});
+    else res.status(500).json({error: "could not load post"});
+  }
+  if (typeof req.body.commentBy !== "string") {
+    res.status(400).json({error: "username must be a string"});
+    return;
+  }
+  try {
+    await userData.getUserByUsername(req.body.commentBy);
+  } catch (e) {
+    if (e === "User not found") res.status(400).json({error: "invalid userId"});
+    else res.status(500).json({error: e});
+  }
+  if (typeof req.body.title !== "string") {
+    res.status(400).json({error: "comment title must be a string"});
+    return;
+  }
+  if (!req.body.title.trim()) {
+    res.status(400).json({error: "comment title must not be empty"});
+    return;
+  }
+  if (typeof req.body.description !== "string") {
+    res.status(400).json({error: "comment must be a string"});
+    return;
+  }
+  if (!req.body.description.trim()) {
+    res.status(400).json({error: "comment must not be empty"});
+    return;
+  }
+  try {
+    const comment = await commentData.addComment(req.body.commentBy, req.body.description, req.body.title);
+    const response = await postData.addComment(req.body.id, comment._id);
+    res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+  }
+});
+
 module.exports = router;
