@@ -222,13 +222,9 @@ router.post("/post", async (req, res) => {
   }
 });
 
-router.post("/comment", async (req, res) => {
-  if (typeof req.body.postId !== "string") {
-    res.status(400).json({error: "id must be a string"});
-    return;
-  }
+router.post("/comment/:id", async (req, res) => {
   try {
-    await postData.getPostById(req.body.postId);
+    await postData.getPostById(req.params.id);
   } catch (e) {
     if (e === "post not found") res.status(404).json({error: "post not found"});
     else res.status(500).json({error: "could not load post"});
@@ -261,7 +257,7 @@ router.post("/comment", async (req, res) => {
   }
   try {
     const comment = await commentData.addComment(req.body.commentBy, req.body.description, req.body.title);
-    const response = await postData.addComment(req.body.id, comment._id);
+    const response = await postData.addComment(req.params.id, comment._id);
     res.status(200).json(response);
   } catch (e) {
     console.log(e);

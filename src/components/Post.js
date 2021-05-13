@@ -15,6 +15,8 @@ import {
   Checkbox,
   FormControlLabel,
   TableBody,
+  Button,
+  TextField
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -39,12 +41,38 @@ const useStyles = makeStyles({
     flexGrow: 2,
     flexDirection: "row",
   },
+  error: {
+    color: "red",
+  }
 });
 const Home = (props) => {
   const classes = useStyles();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
+  const [values, setValues] = useState({ title: "", description: "" });
+  const [error, setError] = useState(false);
+
+  async function HandleSubmit(event) {
+    try {
+      let user = (await axios.get(`http://localhost:4000/users/${cookies.get("userId")}`)).data;
+      let result = await axios.post(`http://localhost:4000/posts/comment/${props.match.params.id}`, {
+        commentBy: user.username,
+        title: values.title.trim(),
+        description: values.description.trim()
+      });
+      window.location.href = window.location.href;
+    } catch (e) {
+      console.log(e);
+      setError(true);
+    }
+  }
+
+  const set = (name) => {
+    return ({ target: { value } }) => {
+      setValues((oldValues) => ({ ...oldValues, [name]: value }));
+    };
+  };
 
   useEffect(() => {
     async function getPostData() {
@@ -173,6 +201,42 @@ const Home = (props) => {
               </Card>
             </Grid>
             {data.data.comments && card}
+            <Grid item>
+              <Card variant="outlined">
+                <CardContent>
+                  <Typography gutterBottom variant="h3" component="h2">
+                  Write a Comment
+                  </Typography>
+                  <form id="comment-form">
+                    <TextField
+                      value={values.title}
+                      onChange={set("title")}
+                      id="title"
+                      label="Comment Title"
+                    />
+                    <br />
+                    <br />
+                    <br />
+                    <TextField 
+                      multiLine
+                      value={values.description}
+                      onChange={set("description")}
+                      id="description"
+                      label="Comment"
+                    />
+                    <br />
+                    <br />
+                    <br />
+                    <Button onClick={HandleSubmit}>Submit</Button>
+                  </form>
+                  {error && (
+                    <Typography className={classes.error}>
+                      There was an error submitting your Comment.
+                    </Typography>
+                  )}
+                </CardContent>
+              </Card>
+            </Grid>
           </Grid>
         </Grid>
       </div>
