@@ -83,12 +83,12 @@ const Home = (props) => {
     );
   };
   let card = {};
-  if (data && data.data) {
+  if (data && data.data && Array.isArray(data.data)) {
     card = data.data.map((posts) => {
       return buildCard(posts);
     });
   }
-  if (loading) {
+  if (loading || !data || !data.data || !Array.isArray(data.data)) {
     return (
       <div className="postsBody">
         <Grid
