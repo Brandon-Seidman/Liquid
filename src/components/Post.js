@@ -7,16 +7,10 @@ import actions from '../actions';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
-  CardHeader,
   Grid,
   Typography,
-  FormGroup,
   makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
   Button,
   TextField
 } from "@material-ui/core";
@@ -47,7 +41,7 @@ const useStyles = makeStyles({
     color: "red",
   }
 });
-const Home = (props) => {
+const Post = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector(state => state.global);
@@ -234,4 +228,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Post;
