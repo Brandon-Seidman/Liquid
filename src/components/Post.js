@@ -51,7 +51,7 @@ const Home = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector(state => state.global);
-  const { liked } = useSelector(state => state.post);
+  const { liked, likes } = useSelector(state => state.post);
   const { values } = useSelector(state => state.form);
 
   async function HandleSubmit(event) {
@@ -93,30 +93,32 @@ const Home = (props) => {
       );
 
       dispatch(actions.setData(newData));
+      dispatch(actions.setLikes(newData.data.likes));
       dispatch(actions.setLiked(likeData.data.liked));
       dispatch(actions.setLoading(false));
     }
 
     getPostData();
   }, []);
-  useEffect(() => {
-    async function getPostData() {
-      let newData = await axios.get(
-        "http://localhost:4000/posts/" + props.match.params.id
-      );
-      let likeData = await axios.post("http://localhost:4000/posts/isLiked", {
-        userId: cookies.get("userId"),
-        postId: props.match.params.id,
-      });
-      let userData = await axios.get(
-        "http://localhost:4000/users/" + cookies.get("userId")
-      );
-      console.log("likes", newData.data);
-      dispatch(actions.setData(newData));
-      dispatch(actions.setLiked(likeData.data.liked));
-    }
-    getPostData();
-  }, [liked]);
+
+  // useEffect(() => {
+  //   async function getPostData() {
+  //     let newData = await axios.get(
+  //       "http://localhost:4000/posts/" + props.match.params.id
+  //     );
+  //     let likeData = await axios.post("http://localhost:4000/posts/isLiked", {
+  //       userId: cookies.get("userId"),
+  //       postId: props.match.params.id,
+  //     });
+  //     let userData = await axios.get(
+  //       "http://localhost:4000/users/" + cookies.get("userId")
+  //     );
+  //     console.log("likes", newData.data);
+  //     dispatch(actions.setData(newData));
+  //     dispatch(actions.setLiked(likeData.data.liked));
+  //   }
+  //   getPostData();
+  // }, [liked]);
 
   const buildCard = (comment) => {
     return (
@@ -176,12 +178,13 @@ const Home = (props) => {
                     })}
                   </Typography>
                   <Typography>Posted By: {data.data.user}</Typography>
-                  <Typography> {data.data.likes} Likes</Typography>
+                  <Typography> {likes} Likes</Typography>
                   {liked && (
                     <FavoriteIcon
                       onClick={async (event) => {
                         event.preventDefault();
                         dispatch(actions.setLiked(false));
+                        dispatch(actions.setLikes(likes-1));
                         await axios.post("http://localhost:4000/posts/unlike", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
@@ -195,6 +198,7 @@ const Home = (props) => {
                       onClick={async (event) => {
                         event.preventDefault();
                         dispatch(actions.setLiked(true));
+                        dispatch(actions.setLikes(likes+1));
                         await axios.post("http://localhost:4000/posts/like", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
