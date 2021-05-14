@@ -101,25 +101,6 @@ const Home = (props) => {
     getPostData();
   }, []);
 
-  // useEffect(() => {
-  //   async function getPostData() {
-  //     let newData = await axios.get(
-  //       "http://localhost:4000/posts/" + props.match.params.id
-  //     );
-  //     let likeData = await axios.post("http://localhost:4000/posts/isLiked", {
-  //       userId: cookies.get("userId"),
-  //       postId: props.match.params.id,
-  //     });
-  //     let userData = await axios.get(
-  //       "http://localhost:4000/users/" + cookies.get("userId")
-  //     );
-  //     console.log("likes", newData.data);
-  //     dispatch(actions.setData(newData));
-  //     dispatch(actions.setLiked(likeData.data.liked));
-  //   }
-  //   getPostData();
-  // }, [liked]);
-
   const buildCard = (comment) => {
     return (
       <Grid item>
