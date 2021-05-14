@@ -143,7 +143,7 @@ const Home = (props) => {
     });
   }
 
-  if (loading || !data.data.comments || liked === null) {
+  if (loading || !data || !data.data.comments || liked === null) {
     return (
       <div className="postsBody">
         <div>Loading...</div>
