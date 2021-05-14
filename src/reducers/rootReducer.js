@@ -5,6 +5,7 @@ import postFormReducer from './postFormReducer';
 import postReducer from './postReducer';
 import storeReducer from './storeReducer';
 import userReducer from './userReducer';
+import signupReducer from './signupReducer';
 
 const rootReducer = combineReducers({
     form: formReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     postForm: postFormReducer,
     post: postReducer,
     store: storeReducer,
-    user: userReducer
+    user: userReducer,
+    signup: signupReducer
 });
 
 export default rootReducer;

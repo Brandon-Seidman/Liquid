@@ -62,6 +62,32 @@ const setUnlock = (unlock) => ({
     }
 });
 
+const setPasswordError = (error) => ({
+    type: 'SET_PASSWORD_ERROR',
+    payload: {
+        error: error
+    }
+});
+
+const setPasswordLengthError = (error) => ({
+    type: 'SET_PASSWORD_LENGTH_ERROR',
+    payload: {
+        error: error
+    }
+});
+
+const setUsernameTakenError = (error) => ({
+    type: 'SET_USERNAME_TAKEN_ERROR',
+    payload: {
+        error: error
+    }
+});
+
+const clearSignupErrors = () => ({
+    type: 'CLEAR_SIGNUP_ERRORS',
+    payload: {}
+});
+
 module.exports = {
     setLoading,
     setData,
@@ -71,5 +97,9 @@ module.exports = {
     setUser,
     setLiked,
     setIngredientFields,
-    setUnlock
+    setUnlock,
+    setPasswordError,
+    setPasswordLengthError,
+    setUsernameTakenError,
+    clearSignupErrors
 };
