@@ -1,5 +1,6 @@
 const initialState = {
-    liked: false
+    liked: false,
+    likes: 0
 };
 
 const postReducer = (state = initialState, action) => {
@@ -7,7 +8,9 @@ const postReducer = (state = initialState, action) => {
 
     switch (type) {
         case "SET_LIKED":
-            return {liked: payload.liked};
+            return {...state, liked: payload.liked};
+        case "SET_LIKES":
+            return {...state, likes: payload.likes};
         default:
             return state;
     }

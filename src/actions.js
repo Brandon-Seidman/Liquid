@@ -48,6 +48,13 @@ const setLiked = (liked) => ({
     }
 });
 
+const setLikes = (likes) => ({
+    type: 'SET_LIKES',
+    payload: {
+        likes: likes
+    }
+});
+
 const setIngredientFields = (ingredientFields) => ({
     type: 'SET_INGREDIENT_FIELDS',
     payload: {
@@ -96,6 +103,7 @@ module.exports = {
     updateValue,
     setUser,
     setLiked,
+    setLikes,
     setIngredientFields,
     setUnlock,
     setPasswordError,
