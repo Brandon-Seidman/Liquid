@@ -39,7 +39,7 @@ const useStyles = makeStyles({
     flexDirection: "row",
   },
 });
-const Home = (props) => {
+const MyPage = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, loading } = useSelector(state => state.global);
@@ -148,4 +148,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default MyPage;

@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     color: "red",
   }
 });
-const Home = (props) => {
+const Post = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector(state => state.global);
@@ -234,4 +234,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Post;

@@ -46,7 +46,7 @@ const useStyles = makeStyles({
 });
 const cookies = new Cookies();
 
-const Home = (props) => {
+const Store = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector(state => state.global);
@@ -168,4 +168,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Store;
