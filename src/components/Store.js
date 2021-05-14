@@ -8,19 +8,12 @@ import actions from '../actions';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
-  CardHeader,
   Button,
   Grid,
   Typography,
-  FormGroup,
   makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
 } from "@material-ui/core";
-import ActionSettingsInputAntenna from "material-ui/svg-icons/action/settings-input-antenna";
 
 const useStyles = makeStyles({
   cardStyle: {

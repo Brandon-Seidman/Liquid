@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import { useHistory, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from 'react-redux';
 import actions from '../actions';
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Link } from "react-router-dom";
 import {
   Card,
   CardContent,

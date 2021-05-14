@@ -9,14 +9,9 @@ import {
   Card,
   CardActionArea,
   CardContent,
-  CardHeader,
   Grid,
   Typography,
-  FormGroup,
-  makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
+  makeStyles
 } from "@material-ui/core";
 
 const cookies = new Cookies();

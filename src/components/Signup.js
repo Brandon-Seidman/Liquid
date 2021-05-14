@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from 'react-redux';
 import actions from '../actions';
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,

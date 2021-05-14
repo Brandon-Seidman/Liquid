@@ -7,16 +7,10 @@ import actions from '../actions';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
-  CardHeader,
   Grid,
   Typography,
-  FormGroup,
   makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
   Button,
   TextField
 } from "@material-ui/core";
