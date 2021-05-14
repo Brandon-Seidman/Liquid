@@ -35,7 +35,6 @@ const App = () => {
                 event.preventDefault();
                 cookies.remove("userId", { path: "/" });
                 window.location.href = "/";
-                console.log("cookie removed!");
               }}
             >
               <Link to="/"> Logout</Link>

@@ -50,7 +50,6 @@ const MyPage = (props) => {
       let newUserData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
-      console.log(newData);
       dispatch(actions.setUser(newUserData));
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));

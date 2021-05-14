@@ -72,7 +72,6 @@ const Login = (props) => {
 
       if (login.data.password === "Correct") {
         await cookies.set("userId", user.data._id, { path: "/" });
-        console.log(window.location.href);
         window.location.href = window.location.href;
       } else {
         dispatch(actions.setError(true));

@@ -30,7 +30,6 @@ async function main() {
   await create("bretsteiner", "pancakewithsyrup");
   await create("beepboop", "boopbeep");
   const userArray = await userData.getAllUsers();
-  console.log(userArray);
 
   // posts
   let shannonPost = await postData.addpost(

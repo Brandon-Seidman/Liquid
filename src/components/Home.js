@@ -48,7 +48,6 @@ const Home = (props) => {
     async function getData() {
       dispatch(actions.setLoading(true));
       let newData = await axios.get("http://localhost:4000/posts");
-      console.log(newData.data);
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));
     }
