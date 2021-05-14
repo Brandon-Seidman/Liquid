@@ -1,8 +1,18 @@
 import {combineReducers} from 'redux';
-/*import reducer from './reducer';*/
+import formReducer from './formReducer';
+import globalReducer from './globalReducer';
+import postFormReducer from './postFormReducer';
+import postReducer from './postReducer';
+import storeReducer from './storeReducer';
+import userReducer from './userReducer';
 
 const rootReducer = combineReducers({
-    
+    form: formReducer,
+    global: globalReducer,
+    postForm: postFormReducer,
+    post: postReducer,
+    store: storeReducer,
+    user: userReducer
 });
 
 export default rootReducer;
