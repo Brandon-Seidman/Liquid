@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 import "../App.css";
 import axios from "axios";
 
@@ -38,17 +40,16 @@ const useStyles = makeStyles({
 });
 const Home = (props) => {
   const classes = useStyles();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const {data, loading} = useSelector(state => state.global);
   let history = useHistory();
 
   useEffect(() => {
     async function getData() {
-      setLoading(true);
+      dispatch(actions.setLoading(true));
       let newData = await axios.get("http://localhost:4000/posts");
-      console.log(newData.data);
-      setData(newData);
-      setLoading(false);
+      dispatch(actions.setData(newData));
+      dispatch(actions.setLoading(false));
     }
     getData();
   }, []);
@@ -82,12 +83,12 @@ const Home = (props) => {
     );
   };
   let card = {};
-  if (data && data.data) {
+  if (data && data.data && Array.isArray(data.data)) {
     card = data.data.map((posts) => {
       return buildCard(posts);
     });
   }
-  if (loading) {
+  if (loading || !data || !data.data || !Array.isArray(data.data)) {
     return (
       <div className="postsBody">
         <Grid

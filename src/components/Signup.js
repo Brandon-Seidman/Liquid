@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useHistory, withRouter } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -50,28 +52,37 @@ const useStyles = makeStyles({
 });
 const Signup = (props) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    username: "",
-    password: "",
-    rePassword: "",
-  });
-  const [error, setError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordLengthError, setPasswordLengthError] = useState(false);
-  const [usernameTaken, setUsernameTakenError] = useState(false);
+  const dispatch = useDispatch();
+  const { values } = useSelector(state => state.form);
+  const { error } = useSelector(state => state.global);
+  const {
+    passwordError,
+    passwordLengthError,
+    usernameTakenError
+  } = useSelector(state => state.signup);
   let history = useHistory();
+
+  useEffect(() => {
+    dispatch(actions.setValues({
+      username: "",
+      password: "",
+      rePassword: "",
+    }));
+    dispatch(actions.setError(false));
+    dispatch(actions.clearSignupErrors());
+  }, []);
 
   async function HandleLogin(event) {
     try {
-      setUsernameTakenError(false);
+      dispatch(actions.setUsernameTakenError(false));
       if (values.rePassword !== values.password) {
-        setPasswordError(true);
-        setPasswordLengthError(false);
+        dispatch(actions.setPasswordError(true));
+        dispatch(actions.setPasswordLengthError(false));
         return;
       }
       if (values.password.length < 5) {
-        setPasswordLengthError(true);
-        setPasswordError(false);
+        dispatch(actions.setPasswordLengthError(true));
+        dispatch(actions.setPasswordError(false));
         return;
       }
       let signup = await axios.post("http://localhost:4000/users/signup", {
@@ -84,19 +95,19 @@ const Signup = (props) => {
         cookies.set("userId", user._id);
         history.push("/");
       } else if (signup.data.username === "taken") {
-        setUsernameTakenError(true);
+        dispatch(actions.setUsernameTakenError(true));
         return;
       } else {
-        setError(true);
+        dispatch(actions.setError(true));
         return;
       }
     } catch (e) {
-      setError(true);
+      dispatch(actions.setError(true));
     }
   }
   const set = (name) => {
     return ({ target: { value } }) => {
-      setValues((oldValues) => ({ ...oldValues, [name]: value }));
+      dispatch(actions.updateValue(name, value));
     };
   };
 
@@ -159,7 +170,7 @@ const Signup = (props) => {
               Password must be at least 5 characters
             </Typography>
           )}
-          {usernameTaken && (
+          {usernameTakenError && (
             <Typography className={classes.error}>
               Username already taken :(
             </Typography>

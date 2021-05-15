@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
-  CardHeader,
   Button,
   Grid,
   Typography,
-  FormGroup,
   makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
 } from "@material-ui/core";
-import ActionSettingsInputAntenna from "material-ui/svg-icons/action/settings-input-antenna";
 
 const useStyles = makeStyles({
   cardStyle: {
@@ -44,38 +39,42 @@ const useStyles = makeStyles({
 });
 const cookies = new Cookies();
 
-const Home = (props) => {
+const Store = (props) => {
   const classes = useStyles();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [unlock, setUnlock] = useState(false);
-  const [error, setError] = useState(false);
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector(state => state.global);
+  const { unlock } = useSelector(state => state.store);
   let history = useHistory();
 
   useEffect(() => {
+    dispatch(actions.setError(false));
+    dispatch(actions.setUnlock(false));
+  }, []);
+
+  useEffect(() => {
     async function getData() {
-      setLoading(true);
+      dispatch(actions.setLoading(true));
       let newData = await axios.get("http://localhost:4000/posts/lockedPosts");
-      console.log(newData);
-      setData(newData);
-      setLoading(false);
+      dispatch(actions.setData(newData));
+      dispatch(actions.setLoading(false));
     }
     getData();
   }, [, unlock]);
 
   async function handleUnlock(id) {
-    setUnlock(false);
-    setError(false);
+    dispatch(actions.setUnlock(false));
+    dispatch(actions.setError(false));
     let unlockedData = await axios.post(
       "http://localhost:4000/posts/lockedPosts/unlock/",
       { userId: cookies.get("userId"), postId: id }
     );
     if (unlockedData.data.response === "success") {
-      setUnlock(true);
+      dispatch(actions.setUnlock(true));
     } else if (unlockedData.data.response === "insufficient funds") {
-      setError(true);
+      dispatch(actions.setError(true));
     }
   }
+
   const buildCard = (post) => {
     return (
       <Grid item>
@@ -124,13 +123,13 @@ const Home = (props) => {
   };
 
   let card = {};
-  if (data && data.data) {
+  if (data && data.data && Array.isArray(data.data)) {
     card = data.data.map((posts) => {
       return buildCard(posts);
     });
   }
 
-  if (loading) {
+  if (loading || !data.data || !Array.isArray(data.data)) {
     return (
       <div className="postsBody">
         <Grid
@@ -162,4 +161,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Store;

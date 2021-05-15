@@ -25,7 +25,6 @@ router.get("/", async (req, res) => {
 router.get("/lockedPosts", async (req, res) => {
   try {
     let data = await lockedPostData.getAllPosts();
-    console.log(data);
     if (data.length === 0) {
       res.status(404).json({ error: "Looks like there's nothing here yet!" });
       return;

@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "../App.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
-  CardHeader,
   Grid,
   Typography,
-  FormGroup,
   makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
   Button,
   TextField
 } from "@material-ui/core";
@@ -45,13 +41,12 @@ const useStyles = makeStyles({
     color: "red",
   }
 });
-const Home = (props) => {
+const Post = (props) => {
   const classes = useStyles();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [liked, setLiked] = useState(false);
-  const [values, setValues] = useState({ title: "", description: "" });
-  const [error, setError] = useState(false);
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector(state => state.global);
+  const { liked, likes } = useSelector(state => state.post);
+  const { values } = useSelector(state => state.form);
 
   async function HandleSubmit(event) {
     try {
@@ -64,19 +59,22 @@ const Home = (props) => {
       window.location.href = window.location.href;
     } catch (e) {
       console.log(e);
-      setError(true);
+      dispatch(actions.setError(true));
     }
   }
 
   const set = (name) => {
     return ({ target: { value } }) => {
-      setValues((oldValues) => ({ ...oldValues, [name]: value }));
+      dispatch(actions.updateValue(name, value));
     };
   };
 
   useEffect(() => {
+    dispatch(actions.setError(false));
+    dispatch(actions.setValues({ title: "", description: "" }));
+
     async function getPostData() {
-      setLoading(true);
+      dispatch(actions.setLoading(true));
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
       );
@@ -88,31 +86,14 @@ const Home = (props) => {
         "http://localhost:4000/users/" + cookies.get("userId")
       );
 
-      setData(newData);
-      setLiked(likeData.data.liked);
-      setLoading(false);
+      dispatch(actions.setData(newData));
+      dispatch(actions.setLikes(newData.data.likes));
+      dispatch(actions.setLiked(likeData.data.liked));
+      dispatch(actions.setLoading(false));
     }
 
     getPostData();
   }, []);
-  useEffect(() => {
-    async function getPostData() {
-      let newData = await axios.get(
-        "http://localhost:4000/posts/" + props.match.params.id
-      );
-      let likeData = await axios.post("http://localhost:4000/posts/isLiked", {
-        userId: cookies.get("userId"),
-        postId: props.match.params.id,
-      });
-      let userData = await axios.get(
-        "http://localhost:4000/users/" + cookies.get("userId")
-      );
-      console.log("likes", newData.data);
-      setData(newData);
-      setLiked(likeData.data.liked);
-    }
-    getPostData();
-  }, [liked]);
 
   const buildCard = (comment) => {
     return (
@@ -131,13 +112,15 @@ const Home = (props) => {
       </Grid>
     );
   };
+
   let card = {};
   if (data && data.data && data.data.comments) {
     card = data.data.comments.map((comment) => {
       return buildCard(comment);
     });
   }
-  if (loading) {
+
+  if (loading || !data || !data.data.comments || liked === null) {
     return (
       <div className="postsBody">
         <div>Loading...</div>
@@ -170,12 +153,13 @@ const Home = (props) => {
                     })}
                   </Typography>
                   <Typography>Posted By: {data.data.user}</Typography>
-                  <Typography> {data.data.likes} Likes</Typography>
+                  <Typography> {likes} Likes</Typography>
                   {liked && (
                     <FavoriteIcon
                       onClick={async (event) => {
                         event.preventDefault();
-                        setLiked(false);
+                        dispatch(actions.setLiked(false));
+                        dispatch(actions.setLikes(likes-1));
                         await axios.post("http://localhost:4000/posts/unlike", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
@@ -188,7 +172,8 @@ const Home = (props) => {
                     <FavoriteBorderIcon
                       onClick={async (event) => {
                         event.preventDefault();
-                        setLiked(true);
+                        dispatch(actions.setLiked(true));
+                        dispatch(actions.setLikes(likes+1));
                         await axios.post("http://localhost:4000/posts/like", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
@@ -243,4 +228,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default Post;

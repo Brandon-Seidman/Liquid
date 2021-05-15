@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 import {
   Card,
   CardActionArea,
   CardContent,
-  CardHeader,
   Grid,
   Typography,
-  FormGroup,
-  makeStyles,
-  Checkbox,
-  FormControlLabel,
-  TableBody,
+  makeStyles
 } from "@material-ui/core";
 
 const cookies = new Cookies();
@@ -37,26 +34,25 @@ const useStyles = makeStyles({
     flexDirection: "row",
   },
 });
-const Home = (props) => {
+const MyPage = (props) => {
   const classes = useStyles();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState(null);
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector(state => state.global);
+  const { userData } = useSelector(state => state.user);
   let history = useHistory();
 
   useEffect(() => {
     async function getData() {
-      setLoading(true);
+      dispatch(actions.setLoading(true));
       let newData = await axios.post("http://localhost:4000/posts/liked", {
         userId: cookies.get("userId"),
       });
       let newUserData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
-      console.log(newData);
-      setUserData(newUserData);
-      setData(newData);
-      setLoading(false);
+      dispatch(actions.setUser(newUserData));
+      dispatch(actions.setData(newData));
+      dispatch(actions.setLoading(false));
     }
     getData();
   }, []);
@@ -94,7 +90,7 @@ const Home = (props) => {
       return buildCard(posts);
     });
   }
-  if (loading) {
+  if (loading || !data || !data.data || !Array.isArray(data.data) || !userData) {
     return (
       <div className="postsBody">
         <Grid
@@ -146,4 +142,4 @@ const Home = (props) => {
     );
   }
 };
-export default Home;
+export default MyPage;

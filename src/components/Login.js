@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
-import { useHistory, withRouter } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -48,9 +50,15 @@ const useStyles = makeStyles({
 });
 const Login = (props) => {
   const classes = useStyles();
-  const [values, setValues] = useState({ username: "", password: "" });
-  const [error, setError] = useState(false);
+  const dispatch = useDispatch();
+  const { values } = useSelector(state => state.form);
+  const { error } = useSelector(state => state.global);
   let history = useHistory();
+
+  useEffect(() => {
+    dispatch(actions.setValues({ username: "", password: "" }));
+    dispatch(actions.setError(false));
+  }, []);
 
   async function HandleLogin(event) {
     try {
@@ -64,18 +72,17 @@ const Login = (props) => {
 
       if (login.data.password === "Correct") {
         await cookies.set("userId", user.data._id, { path: "/" });
-        console.log(window.location.href);
         window.location.href = window.location.href;
       } else {
-        setError(true);
+        dispatch(actions.setError(true));
       }
     } catch (e) {
-      setError(true);
+      dispatch(actions.setError(true));
     }
   }
   const set = (name) => {
     return ({ target: { value } }) => {
-      setValues((oldValues) => ({ ...oldValues, [name]: value }));
+      dispatch(actions.updateValue(name, value));
     };
   };
 
