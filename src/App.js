@@ -3,6 +3,7 @@ import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import { CardActionArea } from "@material-ui/core";
+import CardContent from '@material-ui/core/CardContent'
 import Post from "./components/Post";
 import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
@@ -20,16 +21,16 @@ const App = () => {
       <Router>
         <div className="header">
           <header>
-            <CardActionArea>
-              <Link to="/">
+            <CardActionArea href= "/">
                 <img
                   src="liquidLogoSmall.png"
                   height="100px"
                   width="200px"
                   alt="Liquid Logo"
                 />
-              </Link>
             </CardActionArea>
+			
+			 <div className="links"> 
             <CardActionArea
               onClick={(event) => {
                 event.preventDefault();
@@ -38,17 +39,28 @@ const App = () => {
                 console.log("cookie removed!");
               }}
             >
-              <Link to="/"> Logout</Link>
+			<CardContent> Logout </CardContent>
             </CardActionArea>
-            <CardActionArea>
-              <Link to="/my-page">My Page</Link>
+			</div>
+			
+			<div className="links">
+            <CardActionArea href="/my-page">
+              <CardContent> My Page </CardContent>
             </CardActionArea>
-            <CardActionArea>
-              <Link to="/store">Liquid Store</Link>
+			</div>
+			
+			<div className="links">
+            <CardActionArea href="/store">
+              <CardContent> Liquid Store </CardContent>
             </CardActionArea>
-            <CardActionArea>
-              <Link to="/post">Post</Link>
+			</div>
+			
+			<div className="links">
+            <CardActionArea href="/post">
+              <CardContent> Post a Liquid! </CardContent>
             </CardActionArea>
+			</div>
+			
           </header>
         </div>
         <br />
