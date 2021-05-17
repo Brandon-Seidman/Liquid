@@ -39,3 +39,13 @@
     transform: rotate(360deg);
   }
 }
+
+.App-body{
+  width: 80%;
+  margin: auto;
+}
+
+/* .postsBody{
+  border-style: dotted;
+  border-color: red;
+} */

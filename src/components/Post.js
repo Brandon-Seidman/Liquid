@@ -8,6 +8,8 @@ import actions from '../actions';
 import {
   Card,
   CardContent,
+  CardMedia,
+  CardHeader,
   Grid,
   Typography,
   makeStyles,
@@ -24,7 +26,7 @@ const useStyles = makeStyles({
     maxWidth: 500,
     height: "auto",
     marginTop: 10,
-    borderRadius: 6,
+
   },
   filters: {
     maxWidth: 200,
@@ -98,7 +100,7 @@ const Post = (props) => {
   const buildCard = (comment) => {
     return (
       <Grid item>
-        <Card variant="outlined">
+        <Card variant="outlined" className={classes.cardStyle}>
           <CardContent>
             <Typography gutterBottom variant="h3" component="h2">
               {comment.post}
@@ -138,7 +140,7 @@ const Post = (props) => {
         >
           <Grid item className={classes.grid} spacing={1}>
             <Grid item>
-              <Card variant="outlined">
+              <Card variant="outlined" className={classes.cardStyle}>
                 <CardContent>
                   <Typography gutterBottom variant="h3" component="h2">
                     {data.data.title}
@@ -202,7 +204,7 @@ const Post = (props) => {
                     <br />
                     <br />
                     <br />
-                    <TextField 
+                    <TextField
                       multiLine
                       value={values.description}
                       onChange={set("description")}
