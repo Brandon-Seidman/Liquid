@@ -85,7 +85,7 @@ const Signup = (props) => {
         dispatch(actions.setPasswordError(false));
         return;
       }
-      let signup = await axios.post("http://https://aws-branch.dw6otddguzk2g.amplifyapp.com//users/signup", {
+      let signup = await axios.post("https://https://aws-branch.dw6otddguzk2g.amplifyapp.com//users/signup", {
         data: { username: values.username, password: values.password },
       });
       let user = await axios.get(
