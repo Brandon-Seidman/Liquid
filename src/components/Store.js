@@ -129,7 +129,7 @@ const Store = (props) => {
     });
   }
 
-  if (loading || !data.data || !Array.isArray(data.data)) {
+  if (loading || !data ||!data.data || !Array.isArray(data.data)) {
     return (
       <div className="postsBody">
         <Grid
