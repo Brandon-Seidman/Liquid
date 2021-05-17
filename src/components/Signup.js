@@ -85,11 +85,11 @@ const Signup = (props) => {
         dispatch(actions.setPasswordError(false));
         return;
       }
-      let signup = await axios.post("https://https://aws-branch.dw6otddguzk2g.amplifyapp.com//users/signup", {
+      let signup = await axios.post("http://localhost:4000/users/signup", {
         data: { username: values.username, password: values.password },
       });
       let user = await axios.get(
-        "http://https://aws-branch.dw6otddguzk2g.amplifyapp.com//users/user/" + values.username
+        "http://localhost:4000/users/user/" + values.username
       );
       if (signup.data.username === "added") {
         cookies.set("userId", user._id);
