@@ -3,7 +3,7 @@ const app = express();
 
 const configRoutes = require("./routes");
 var cors = require("cors");
-app.use(cors());
+app.use(cors({origin: true, credentials: true}));
 
 configRoutes(app);
 
