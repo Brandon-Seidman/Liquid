@@ -118,4 +118,72 @@ router.post("/", async (req, res) => {
     return res.status(400).json({ error: e });
   }
 });
+
+router.post("/friend/:activeUser/:targetUser", async (req, res) => {
+  try {
+    const activeUserId = req.params.activeUser;
+    const targetUserId = req.params.targetUser;
+    if (!activeUserId || !activeUserId.trim() || !targetUserId || !targetUserId.trim()) {
+      return res.status(400).json({ error: "Invalid UserId" });
+    }
+
+    const activeUser = await userData.getUserById(activeUserId);
+    const targetUser = await userData.getUserById(targetUserId);
+    if (!activeUser || !targetUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    let newFriendsList = activeUser.friendList.filter(id => id !== targetUserId);
+    newFriendsList.push(targetUserId);
+
+    const result = await userData.updateUser(
+      activeUser._id,
+      activeUser.username,
+      activeUser.password,
+      newFriendsList,
+      activeUser.posts,
+      activeUser.likes,
+      activeUser.points
+    );
+
+    return res.status(200).json(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
+  }
+});
+
+router.post("/unfriend/:activeUser/:targetUser", async (req, res) => {
+  try {
+    const activeUserId = req.params.activeUser;
+    const targetUserId = req.params.targetUser;
+    if (!activeUserId || !activeUserId.trim() || !targetUserId || !targetUserId.trim()) {
+      return res.status(400).json({ error: "Invalid UserId" });
+    }
+
+    const activeUser = await userData.getUserById(activeUserId);
+    const targetUser = await userData.getUserById(targetUserId);
+    if (!activeUser || !targetUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    let newFriendsList = activeUser.friendList.filter(id => id !== targetUserId);
+
+    const result = await userData.updateUser(
+      activeUser._id,
+      activeUser.username,
+      activeUser.password,
+      newFriendsList,
+      activeUser.posts,
+      activeUser.likes,
+      activeUser.points
+    );
+
+    return res.status(200).json(result);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
+  }
+});
+
 module.exports = router;
