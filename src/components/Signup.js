@@ -87,10 +87,24 @@ const Signup = (props) => {
       }
       let signup = await axios.post("http://localhost:4000/users/signup", {
         data: { username: values.username, password: values.password },
-      });
+      }).then(response => {
+        // success
+        this.setState({result: response.data})
+    })
+    .catch((error) => {
+        // handle this error
+        console.log('error: '+error);
+    });
       let user = await axios.get(
         "http://localhost:4000/users/user/" + values.username
-      );
+      ).then(response => {
+        // success
+        this.setState({result: response.data})
+    })
+    .catch((error) => {
+        // handle this error
+        console.log('error: '+error);
+    });
       if (signup.data.username === "added") {
         cookies.set("userId", user._id);
         history.push("/");
