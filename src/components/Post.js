@@ -12,7 +12,8 @@ import {
   Typography,
   makeStyles,
   Button,
-  TextField
+  TextField,
+  Link
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -45,7 +46,7 @@ const Post = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector(state => state.global);
-  const { liked, likes } = useSelector(state => state.post);
+  const { liked, likes, isFriend } = useSelector(state => state.post);
   const { values } = useSelector(state => state.form);
 
   async function HandleSubmit(event) {
@@ -57,6 +58,18 @@ const Post = (props) => {
         description: values.description.trim()
       });
       window.location.href = window.location.href;
+    } catch (e) {
+      console.log(e);
+      dispatch(actions.setError(true));
+    }
+  }
+
+  async function HandleFriend(event) {
+    try {
+      const poster = (await axios.get(`http://localhost:4000/users/user/${data.data.user}`)).data;
+      const action = isFriend ? "unfriend" : "friend";
+      await axios.post(`http://localhost:4000/users/${action}/${cookies.get("userId")}/${poster._id}`);
+      dispatch(actions.setIsFriend(!isFriend));
     } catch (e) {
       console.log(e);
       dispatch(actions.setError(true));
@@ -85,7 +98,11 @@ const Post = (props) => {
       let userData = await axios.get(
         "http://localhost:4000/users/" + cookies.get("userId")
       );
+      let posterData = await axios.get(
+        "http://localhost:4000/users/user/" + newData.data.user
+      );
 
+      dispatch(actions.setIsFriend(userData.data.friendList.includes(posterData.data._id)));
       dispatch(actions.setData(newData));
       dispatch(actions.setLikes(newData.data.likes));
       dispatch(actions.setLiked(likeData.data.liked));
@@ -153,6 +170,7 @@ const Post = (props) => {
                     })}
                   </Typography>
                   <Typography>Posted By: {data.data.user}</Typography>
+                  <Link onClick={HandleFriend}>{isFriend ? "Remove Friend" : "Add Friend"}</Link>
                   <Typography> {likes} Likes</Typography>
                   {liked && (
                     <FavoriteIcon
