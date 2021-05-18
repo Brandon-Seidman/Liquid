@@ -102,6 +102,32 @@ const clearSignupErrors = () => ({
     payload: {}
 });
 
+const setYourID = (yourID) => ({
+    type: 'SET_YOUR_ID',
+    payload: {
+        yourID: yourID
+    }
+});
+
+const clearMessages = () => ({
+    type: 'CLEAR_MESSAGES',
+    payload: {}
+});
+
+const addMessage = (message) => ({
+    type: 'ADD_MESSAGE',
+    payload: {
+        message: message
+    }
+});
+
+const setMessage = (message) => ({
+    type: 'SET_MESSAGE',
+    payload: {
+        message: message
+    }
+});
+
 module.exports = {
     setLoading,
     setData,
@@ -117,5 +143,9 @@ module.exports = {
     setPasswordError,
     setPasswordLengthError,
     setUsernameTakenError,
-    clearSignupErrors
+    clearSignupErrors,
+    setYourID,
+    clearMessages,
+    addMessage,
+    setMessage
 };

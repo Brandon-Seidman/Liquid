@@ -1,20 +1,24 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import io from "socket.io-client";
+import { useSelector, useDispatch } from 'react-redux';
+import actions from '../actions';
 import "./Chat.css";
 
 const Chat = () => {
-  const [yourID, setYourID] = useState();
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
+  const { yourID, messages, message } = useSelector(state => state.chat);
 
   const socketRef = useRef();
 
   useEffect(() => {
+    dispatch(actions.clearMessages());
+    dispatch(actions.setMessage(""));
+
     socketRef.current = io.connect('/');
 
     socketRef.current.on("your id", id => {
-      setYourID(id);
+      dispatch(actions.setYourID(id));
     })
 
     socketRef.current.on("message", (message) => {
@@ -24,7 +28,7 @@ const Chat = () => {
   }, []);
 
   function receivedMessage(message) {
-    setMessages(oldMsgs => [...oldMsgs, message]);
+    dispatch(actions.addMessage(message));
   }
 
   function sendMessage(e) {
@@ -33,12 +37,12 @@ const Chat = () => {
       body: message,
       id: yourID,
     };
-    setMessage("");
+    dispatch(actions.setMessage(""));
     socketRef.current.emit("send message", messageObject);
   }
 
   function handleChange(e) {
-    setMessage(e.target.value);
+    dispatch(actions.setMessage(e.target.value));
   }
 
   return (
