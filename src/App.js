@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent'
 import Post from "./components/Post";
 import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
+import Friends from "./components/Friends";
 import Store from "./components/Store";
 import PostForm from "./components/PostForm";
 import Chat from "./components/Chat";
@@ -49,6 +50,12 @@ const App = () => {
               <CardContent> My Page </CardContent>
             </CardActionArea>
 			</div>
+
+      <div className="links">
+            <CardActionArea href="/friends">
+              <CardContent> Friends' Posts </CardContent>
+            </CardActionArea>
+			</div>
 			
 			<div className="links">
             <CardActionArea href="/store">
@@ -78,6 +85,7 @@ const App = () => {
             <Route exact path="/login" component={Home} />
             <Route exact path="/signup" component={Home} />
             <Route exact path="/my-page" component={MyPage} />
+            <Route exact path="/friends" component={Friends} />
             <Route exact path="/store" component={Store} />
             <Route exact path="/post" component={PostForm} />
 			<Route exact path="/chat" component={Chat} />

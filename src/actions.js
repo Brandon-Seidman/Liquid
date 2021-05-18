@@ -55,6 +55,13 @@ const setLikes = (likes) => ({
     }
 });
 
+const setIsFriend = (isFriend) => ({
+    type: 'SET_IS_FRIEND',
+    payload: {
+        isFriend: isFriend
+    }
+});
+
 const setIngredientFields = (ingredientFields) => ({
     type: 'SET_INGREDIENT_FIELDS',
     payload: {
@@ -104,6 +111,7 @@ module.exports = {
     setUser,
     setLiked,
     setLikes,
+    setIsFriend,
     setIngredientFields,
     setUnlock,
     setPasswordError,
