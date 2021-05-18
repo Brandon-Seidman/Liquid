@@ -112,6 +112,8 @@ const Login = (props) => {
               onChange={set("password")}
               id="password"
               label="Password"
+			  type="password"
+			  autoComplete="current-password"
             />
             <br />
             <br />

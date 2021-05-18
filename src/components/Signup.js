@@ -137,6 +137,7 @@ const Signup = (props) => {
               onChange={set("password")}
               id="password"
               label="Password"
+			  type="password"
             />
             <br />
             <br />
@@ -146,6 +147,7 @@ const Signup = (props) => {
               onChange={set("rePassword")}
               id="rePassword"
               label="Re-enter Password"
+			  type="password"
             />
             <br />
             <br />

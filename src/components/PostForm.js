@@ -36,7 +36,7 @@ const useStyles = makeStyles({
   liquidBody: {
     height: "auto",
     marginTop: 10,
-    marginLeft: 300,
+    marginLeft: 500,
     justifyContent: "center",
     alignItems: "center",
   },

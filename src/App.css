@@ -33,9 +33,16 @@
 
 .links {
 	color: white;
-	margin: 10px;
+	display: inline-block;
+	width: 20%;
+	text-align:center;
+	font-weight:10px;
 }
 
+.links:hover
+{
+	color: white;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
