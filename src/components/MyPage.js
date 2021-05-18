@@ -61,7 +61,7 @@ const MyPage = (props) => {
     return (
       <Grid item>
         <Card variant="outlined">
-          <CardActionArea>
+          <CardActionArea  onClick={(event) => history.push("/post/" + post._id)}>
             <CardContent>
               <Typography gutterBottom variant="h3" component="h2">
                 {post.title}
