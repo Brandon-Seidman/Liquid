@@ -54,7 +54,7 @@ const Store = (props) => {
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
-      let newData = await axios.get("http://localhost:4000/posts/lockedPosts");
+      let newData = await axios.get("http://localhost:8080/posts/lockedPosts");
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));
     }
@@ -65,7 +65,7 @@ const Store = (props) => {
     dispatch(actions.setUnlock(false));
     dispatch(actions.setError(false));
     let unlockedData = await axios.post(
-      "http://localhost:4000/posts/lockedPosts/unlock/",
+      "http://localhost:8080/posts/lockedPosts/unlock/",
       { userId: cookies.get("userId"), postId: id }
     );
     if (unlockedData.data.response === "success") {

@@ -7,9 +7,9 @@ app.use(cors({origin: true, credentials: true}));
 
 configRoutes(app);
 
-const port = process.env.HTTP_PORT || 4000;
+const port = process.env.HTTP_PORT || 8080;
 
 app.listen(port, () => {
   console.log("We got a server!");
-  console.log("express server now running at localhost:4000");
+  console.log("express server now running at localhost:8080");
 });

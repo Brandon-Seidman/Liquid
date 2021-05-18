@@ -85,7 +85,7 @@ const Signup = (props) => {
         dispatch(actions.setPasswordError(false));
         return;
       }
-      let signup = await axios.post("http://localhost:4000/users/signup", {
+      let signup = await axios.post("http://localhost:8080/users/signup", {
         data: { username: values.username, password: values.password },
       }).then(response => {
         // success
@@ -96,7 +96,7 @@ const Signup = (props) => {
         console.log('error: '+error);
     });
       let user = await axios.get(
-        "http://localhost:4000/users/user/" + values.username
+        "http://localhost:8080/users/user/" + values.username
       ).then(response => {
         // success
         this.setState({result: response.data})

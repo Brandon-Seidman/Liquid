@@ -52,8 +52,8 @@ const Post = (props) => {
 
   async function HandleSubmit(event) {
     try {
-      let user = (await axios.get(`http://localhost:4000/users/${cookies.get("userId")}`)).data;
-      let result = await axios.post(`http://localhost:4000/posts/comment/${props.match.params.id}`, {
+      let user = (await axios.get(`http://localhost:8080/users/${cookies.get("userId")}`)).data;
+      let result = await axios.post(`http://localhost:8080/posts/comment/${props.match.params.id}`, {
         commentBy: user.username,
         title: values.title.trim(),
         description: values.description.trim()
@@ -78,14 +78,14 @@ const Post = (props) => {
     async function getPostData() {
       dispatch(actions.setLoading(true));
       let newData = await axios.get(
-        "http://localhost:4000/posts/" + props.match.params.id
+        "http://localhost:8080/posts/" + props.match.params.id
       );
-      let likeData = await axios.post("http://localhost:4000/posts/isLiked", {
+      let likeData = await axios.post("http://localhost:8080/posts/isLiked", {
         userId: cookies.get("userId"),
         postId: props.match.params.id,
       });
       let userData = await axios.get(
-        "http://localhost:4000/users/" + cookies.get("userId")
+        "http://localhost:8080/users/" + cookies.get("userId")
       );
 
       dispatch(actions.setData(newData));
@@ -162,7 +162,7 @@ const Post = (props) => {
                         event.preventDefault();
                         dispatch(actions.setLiked(false));
                         dispatch(actions.setLikes(likes-1));
-                        await axios.post("http://localhost:4000/posts/unlike", {
+                        await axios.post("http://localhost:8080/posts/unlike", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
                           postId: props.match.params.id,
@@ -176,7 +176,7 @@ const Post = (props) => {
                         event.preventDefault();
                         dispatch(actions.setLiked(true));
                         dispatch(actions.setLikes(likes+1));
-                        await axios.post("http://localhost:4000/posts/like", {
+                        await axios.post("http://localhost:8080/posts/like", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
                           postId: props.match.params.id,
