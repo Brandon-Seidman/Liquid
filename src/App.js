@@ -9,6 +9,7 @@ import Signup from "./components/Signup";
 import MyPage from "./components/MyPage";
 import Store from "./components/Store";
 import PostForm from "./components/PostForm";
+import Chat from "./components/Chat";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
@@ -16,6 +17,7 @@ import Cookies from "universal-cookie";
 const App = () => {
   let history = useHistory();
   const cookies = new Cookies();
+  
   if (cookies.get("userId")) {
     return (
       <Router>
@@ -60,6 +62,12 @@ const App = () => {
             </CardActionArea>
 			</div>
 			
+			<div className="links">
+            <CardActionArea href="/chat">
+              <CardContent> Chat </CardContent>
+            </CardActionArea>
+			</div>
+			
           </header>
         </div>
         <br />
@@ -72,7 +80,7 @@ const App = () => {
             <Route exact path="/my-page" component={MyPage} />
             <Route exact path="/store" component={Store} />
             <Route exact path="/post" component={PostForm} />
-
+			<Route exact path="/chat" component={Chat} />
             <Route exact path="/" component={Home} />
           </div>
         }
