@@ -47,7 +47,7 @@ const Home = (props) => {
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
-      let newData = await axios.get("http://localhost:8080/posts");
+      let newData = await axios.get("http://localhost:443/posts");
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));
     }

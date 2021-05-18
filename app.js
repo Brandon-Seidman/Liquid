@@ -7,9 +7,9 @@ app.use(cors({origin: true, credentials: true}));
 
 configRoutes(app);
 
-const port = process.env.HTTP_PORT || 8080;
+const port = process.env.HTTP_PORT || 443;
 
 app.listen(port, () => {
   console.log("We got a server!");
-  console.log("express server now running at localhost:8080");
+  console.log("express server now running at localhost:443");
 });

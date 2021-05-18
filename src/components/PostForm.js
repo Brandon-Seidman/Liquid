@@ -60,7 +60,7 @@ const PostForm = (props) => {
   async function HandleSubmit(event) {
     try {
       const ingredients = values.ingredients.filter(ingredient => !!ingredient.trim())
-      let result = await axios.post("http://localhost:8080/posts/post", {
+      let result = await axios.post("http://localhost:443/posts/post", {
         userId: cookies.get("userId"),
         title: values.title.trim(),
         description: values.description.trim(),

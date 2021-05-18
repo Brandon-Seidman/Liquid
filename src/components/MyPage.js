@@ -44,11 +44,11 @@ const MyPage = (props) => {
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
-      let newData = await axios.post("http://localhost:8080/posts/liked", {
+      let newData = await axios.post("http://localhost:443/posts/liked", {
         userId: cookies.get("userId"),
       });
       let newUserData = await axios.get(
-        "http://localhost:8080/users/" + cookies.get("userId")
+        "http://localhost:443/users/" + cookies.get("userId")
       );
       dispatch(actions.setUser(newUserData));
       dispatch(actions.setData(newData));
