@@ -1,0 +1,13 @@
+.card{
+	background-color:lightblue;
+}
+
+.full{
+	padding:5px;
+	width:50%;
+	margin: 0 auto;
+}
+
+.title{
+	color: white;
+}

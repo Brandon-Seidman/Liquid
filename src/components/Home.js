@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
 import "../App.css";
 import axios from "axios";
-
+import "./Cards.css";
 import {
   Card,
   CardActionArea,
@@ -33,7 +33,6 @@ const useStyles = makeStyles({
     maxWidth: 200,
     height: "auto",
     marginLeft: 20,
-
     borderRadius: 6,
   },
   postBody: {
@@ -41,7 +40,7 @@ const useStyles = makeStyles({
   },
   grid: {
     flexGrow: 2,
-    flexDirection: "row",
+    flexDirection: "row"
   },
 });
 const Home = (props) => {
@@ -92,15 +91,19 @@ const Home = (props) => {
 
   const buildCard = (post) => {
     return (
+	<div className = "full">
       <Grid item>
         <Card variant="outlined">
           <CardActionArea
             onClick={(event) => history.push("/post/" + post._id)}
           >
+		  <div className = "card">
             <CardContent>
+			<div className = "title">
               <Typography gutterBottom variant="h3" component="h2">
                 {post.title}
               </Typography>
+			  </div>
               <Typography gutterBottom variant="h6" component="h3">
                 {post.description}
               </Typography>
@@ -114,9 +117,11 @@ const Home = (props) => {
               <Typography>{post.likes} likes</Typography>
               <Typography>{post.views || 0} views</Typography>
             </CardContent>
+			</div>
           </CardActionArea>
         </Card>
       </Grid>
+	  </div>
     );
   };
   let card = {};
