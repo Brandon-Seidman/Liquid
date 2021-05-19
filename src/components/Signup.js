@@ -96,15 +96,16 @@ const Signup = (props) => {
         .catch((err) => {
           console.log(err);
         });
-      try{
-        await signupauth(values.email, values.password)
-      } catch (e) {
-        dispatch(actions.setError(true));
-        dispatch(actions.setFormLoading(false));
-      }
 
 
       if (signup.data.username === "added") {
+        try{
+          await signupauth(values.email, values.password)
+        } catch (e) {
+          dispatch(actions.setError(true));
+          dispatch(actions.setFormLoading(false));
+          return;
+        }
         let user = await axios
           .get("http://localhost:4000/users/user/" + values.username)
           .catch((err) => {

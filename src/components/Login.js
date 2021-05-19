@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import { useAuth } from '../contexts/AuthContext'
 
 import { Link } from "react-router-dom";
 import {
@@ -56,12 +57,13 @@ const Login = (props) => {
   const { values, formLoading } = useSelector((state) => state.form);
   const { error } = useSelector((state) => state.global);
   let history = useHistory();
+  const { loginauth } = useAuth();
 
   useEffect(() => {
     if (cookies.get("userId")) {
       history.push("/");
     }
-    dispatch(actions.setValues({ username: "", password: "" }));
+    dispatch(actions.setValues({ email: "", username: "", password: "" }));
     dispatch(actions.setError(false));
     dispatch(actions.setFormLoading(false));
   }, []);
@@ -78,6 +80,13 @@ const Login = (props) => {
       );
 
       if (login.data.password === "Correct") {
+        try{
+          await loginauth(values.email, values.password)
+        } catch (e) {
+          dispatch(actions.setError(true));
+          dispatch(actions.setFormLoading(false));
+          return;
+        }
         await cookies.set("userId", user.data._id, { path: "/" });
         window.location.href = window.location.href;
       } else {
@@ -108,6 +117,16 @@ const Login = (props) => {
               Login
           </Typography>
           <form id="login-form">
+            <TextField
+              value={values.email}
+              onChange={set("email")}
+              id="email"
+              label="Email"
+              type="email"
+            />
+            <br />
+            <br />
+            <br />
             <TextField
               value={values.username}
               onChange={set("username")}
