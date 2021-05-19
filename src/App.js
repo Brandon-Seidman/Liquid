@@ -53,7 +53,7 @@ const App = () => {
             </CardActionArea>
 			</div>
 
-      <div className="links">
+			<div className="links">
             <CardActionArea href="/friends">
               <CardContent> Friends' Posts </CardContent>
             </CardActionArea>

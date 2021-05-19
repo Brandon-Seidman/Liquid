@@ -135,6 +135,7 @@ const Post = (props) => {
 
   const buildCard = (comment) => {
     return (
+	<div className = "full">
       <Grid item>
         <Card variant="outlined">
           <CardContent>
@@ -148,6 +149,7 @@ const Post = (props) => {
           </CardContent>
         </Card>
       </Grid>
+	  </div>
     );
   };
 
@@ -175,12 +177,16 @@ const Post = (props) => {
           spacing={2}
         >
           <Grid item className={classes.grid} spacing={1}>
+		  <div className = "full">
             <Grid item>
               <Card variant="outlined">
+			  <div className = "card">
                 <CardContent>
+				<div className = "title">
                   <Typography gutterBottom variant="h3" component="h2">
                     {data.data.title}
                   </Typography>
+				  </div>
                   <Typography gutterBottom variant="h6" component="h3">
                     {data.data.description}
                   </Typography>
@@ -225,9 +231,14 @@ const Post = (props) => {
                   )}
                   <Typography> {data.data.views} Views</Typography>
                 </CardContent>
+				</div>
               </Card>
             </Grid>
+			</div>
+			
             {data.data.comments && card}
+
+			<div className = "full">
             <Grid item>
               <Card variant="outlined">
                 <CardContent>
@@ -264,6 +275,7 @@ const Post = (props) => {
                 </CardContent>
               </Card>
             </Grid>
+			</div>
           </Grid>
         </Grid>
       </div>
