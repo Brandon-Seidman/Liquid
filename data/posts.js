@@ -39,6 +39,7 @@ let exportedMethods = {
       title: title,
       description: description,
       likes: 0,
+      views: 0,
       comments: [],
       ingredients: ingredients,
       _id: uuid.v4(),
@@ -58,7 +59,7 @@ let exportedMethods = {
     return true;
   },
 
-  async updatepost(id, user, title, description, likes, comments, ingredients) {
+  async updatepost(id, user, title, description, likes, views, comments, ingredients) {
     const post = await this.getPostById(id);
     if (typeof description !== "string") throw "description must be a string";
     if (typeof user !== "string") throw "posterUsername must be a string";
@@ -66,12 +67,14 @@ let exportedMethods = {
     if (!Array.isArray(ingredients)) throw "ingredients must be a array";
     if (!Array.isArray(comments)) throw "comments must be a array";
     if (!Array.isArray(likes)) throw "likes must be a array";
+    if (typeof views !== Number) throw "views must be a number";
 
     const postUpdateInfo = {
       user: user,
       title: title,
       description: description,
       likes: likes,
+      views: views,
       comments: comments,
       ingredients: ingredients,
     };
@@ -102,6 +105,7 @@ let exportedMethods = {
       title: post.title,
       description: post.description,
       likes: post.likes,
+      views: post.views,
       comments: post.comments,
       ingredients: post.ingredients,
     };
@@ -125,6 +129,7 @@ let exportedMethods = {
       title: post.title,
       description: post.description,
       likes: points,
+      views: post.views,
       comments: post.comments,
       ingredients: post.ingredients,
     };
@@ -147,6 +152,31 @@ let exportedMethods = {
       title: post.title,
       description: post.description,
       likes: points,
+      views: post.views,
+      comments: post.comments,
+      ingredients: post.ingredients,
+    };
+    const postCollection = await posts();
+    const updateInfo = await postCollection.updateOne(
+      { _id: id },
+      { $set: postUpdateInfo }
+    );
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount)
+      throw "Update failed";
+
+    return await this.getPostById(id);
+  },
+
+  async addView(id) {
+    const post = await this.getPostById(id);
+    if (!id) throw "Error: an id must be supplied";
+    let views = post.views + 1;
+    const postUpdateInfo = {
+      user: post.user,
+      title: post.title,
+      description: post.description,
+      likes: post.likes,
+      views: views,
       comments: post.comments,
       ingredients: post.ingredients,
     };
