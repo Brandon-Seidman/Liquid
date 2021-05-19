@@ -1,5 +1,6 @@
 const initialState = {
-    values: {}
+    values: {},
+    formLoading: false
 };
 
 const formReducer = (state = initialState, action) => {
@@ -7,9 +8,11 @@ const formReducer = (state = initialState, action) => {
 
     switch (type) {
         case "SET_VALUES":
-            return {values: payload.values};
+            return {...state, values: payload.values};
         case "UPDATE_VALUE":
-            return {values: {...state.values, [payload.target]: payload.value}};
+            return {...state, values: {...state.values, [payload.target]: payload.value}};
+        case "SET_FORM_LOADING":
+            return {...state, formLoading: payload.formLoading};
         default:
             return state;
     }

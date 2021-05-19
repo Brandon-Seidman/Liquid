@@ -51,7 +51,7 @@ const useStyles = makeStyles({
 const Login = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { values } = useSelector((state) => state.form);
+  const { values, formLoading } = useSelector((state) => state.form);
   const { error } = useSelector((state) => state.global);
   let history = useHistory();
 
@@ -61,10 +61,12 @@ const Login = (props) => {
     }
     dispatch(actions.setValues({ username: "", password: "" }));
     dispatch(actions.setError(false));
+    dispatch(actions.setFormLoading(false));
   }, []);
 
   async function HandleLogin(event) {
     try {
+      dispatch(actions.setFormLoading(true));
       let login = await axios.post("http://localhost:4000/users", {
         data: { username: values.username, password: values.password },
       });
@@ -78,9 +80,11 @@ const Login = (props) => {
         window.location.href = window.location.href;
       } else {
         dispatch(actions.setError(true));
+        dispatch(actions.setFormLoading(false));
       }
     } catch (e) {
       dispatch(actions.setError(true));
+      dispatch(actions.setFormLoading(false));
     }
   }
   const set = (name) => {
@@ -127,6 +131,11 @@ const Login = (props) => {
           <Link className="Link" to="/signup">
             Don't have an account yet? Sign up here!
           </Link>
+          {formLoading && (
+            <Typography className={classes.error}>
+              Logging in...
+            </Typography>
+          )}
           {error && (
             <Typography className={classes.error}>
               Invalid Username or Password

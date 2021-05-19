@@ -34,6 +34,13 @@ const updateValue = (target, value) => ({
     }
 });
 
+const setFormLoading = (formLoading) => ({
+    type: 'UPDATE_FORM_LOADING',
+    payload: {
+        formLoading: formLoading,
+    }
+});
+
 const setUser = (user) => ({
     type: 'SET_USER',
     payload: {
@@ -148,6 +155,7 @@ module.exports = {
     setError,
     setValues,
     updateValue,
+    setFormLoading,
     setUser,
     setLiked,
     setLikes,

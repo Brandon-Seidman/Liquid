@@ -52,13 +52,14 @@ const useStyles = makeStyles({
 const PostForm = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { values } = useSelector(state => state.form);
+  const { values, formLoading } = useSelector(state => state.form);
   const { ingredientFields } = useSelector(state => state.postForm);
   const { error } = useSelector(state => state.global);
   let history = useHistory();
 
   async function HandleSubmit(event) {
     try {
+      dispatch(actions.setFormLoading(true));
       const ingredients = values.ingredients.filter(ingredient => !!ingredient.trim())
       let result = await axios.post("http://localhost:4000/posts/post", {
         userId: cookies.get("userId"),
@@ -70,6 +71,7 @@ const PostForm = (props) => {
     } catch (e) {
       console.log(e);
       dispatch(actions.setError(true));
+      dispatch(actions.setFormLoading(false));
     }
   }
 
@@ -107,6 +109,7 @@ const PostForm = (props) => {
     dispatch(actions.setError(false));
     dispatch(actions.setValues({ title: "", description: "", ingredients: [] }));
     dispatch(actions.setIngredientFields([]));
+    dispatch(actions.setFormLoading(false));
   }, []);
 
   if (values.ingredients && ingredientFields && ingredientFields.length === 0) {
@@ -154,6 +157,11 @@ const PostForm = (props) => {
             <br />
             <Button onClick={HandleSubmit}>Submit</Button>
           </form>
+          {formLoading && (
+            <Typography>
+              Submitting...
+            </Typography>
+          )}
           {error && (
             <Typography className={classes.error}>
               There was an error submitting your Liquid.
