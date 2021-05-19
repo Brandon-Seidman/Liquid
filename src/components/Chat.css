@@ -31,11 +31,9 @@
   background-color: transparent;
   border: 3px solid white;
   outline: none;
-  color: white;
+  color: #767676;
   letter-spacing: 1px;
   line-height: 20px;
-
-  color: lightgray;
 }
 
 .b {
