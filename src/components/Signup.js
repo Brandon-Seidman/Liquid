@@ -36,7 +36,7 @@ const useStyles = makeStyles({
   loginBody: {
     height: "auto",
     marginTop: 10,
-    marginLeft: 350,
+    marginLeft: 300,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
     maxWidth: 300,
     justifyContent: "center",
     marginBottom: 50,
-    marginLeft: 90,
+    marginLeft: 115,
   },
   error: {
     color: "red",

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 import "../App.css";
 import axios from "axios";
 
@@ -19,7 +19,7 @@ import {
   TableBody,
   Button,
   Menu,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -36,6 +36,9 @@ const useStyles = makeStyles({
 
     borderRadius: 6,
   },
+  postBody: {
+    margin: 10,
+  },
   grid: {
     flexGrow: 2,
     flexDirection: "row",
@@ -44,19 +47,19 @@ const useStyles = makeStyles({
 const Home = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {data, loading} = useSelector(state => state.global);
-  const {anchorEl, option} = useSelector(state => state.filter);
+  const { data, loading } = useSelector((state) => state.global);
+  const { anchorEl, option } = useSelector((state) => state.filter);
   let history = useHistory();
 
-  const HandleClickButton = event => {
+  const HandleClickButton = (event) => {
     dispatch(actions.setAnchorEl(event.currentTarget));
-  }
+  };
 
-  const HandleChooseFilter = option => {
+  const HandleChooseFilter = (option) => {
     console.log(`Handling option: ${option}`);
     dispatch(actions.setOption(option));
     dispatch(actions.setAnchorEl(null));
-  }
+  };
 
   useEffect(() => {
     async function getData() {
@@ -132,44 +135,13 @@ const Home = (props) => {
           alignItems="flex-start"
           spacing={2}
         >
-          {/* <Grid className={classes.filters} item>
-            <Card variant="outlined">
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h3">
-                  Filter By:
-                </Typography>
-                <FormGroup>
-                  <FormControlLabel
-                    label="Alcoholic"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Non-Alcoholic"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Smoothies"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                  <FormControlLabel
-                    label="Dairy Free"
-                    control={<Checkbox color="primary" />}
-                    labelPlacement="end"
-                  />
-                </FormGroup>
-              </CardContent>
-            </Card>
-          </Grid> */}
           <div>Loading...</div>
         </Grid>
       </div>
     );
   } else {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Button onClick={HandleClickButton}>{`Filter by ${option}`}</Button>
         <Menu
           anchorEl={anchorEl}
@@ -178,8 +150,12 @@ const Home = (props) => {
           onClose={() => HandleChooseFilter(option)}
         >
           <MenuItem onClick={() => HandleChooseFilter("all")}>all</MenuItem>
-          <MenuItem onClick={() => HandleChooseFilter("mostViewed")}>mostViewed</MenuItem>
-          <MenuItem onClick={() => HandleChooseFilter("mostLiked")}>mostLiked</MenuItem>
+          <MenuItem onClick={() => HandleChooseFilter("mostViewed")}>
+            mostViewed
+          </MenuItem>
+          <MenuItem onClick={() => HandleChooseFilter("mostLiked")}>
+            mostLiked
+          </MenuItem>
         </Menu>
         <Grid
           container

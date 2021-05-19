@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from "react-redux";
 import Cookies from "universal-cookie";
-import actions from '../actions';
+import actions from "../actions";
 import "../App.css";
 import axios from "axios";
 
@@ -14,6 +14,7 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
+import { CommandCursor } from "mongodb";
 
 const cookies = new Cookies();
 
@@ -31,6 +32,9 @@ const useStyles = makeStyles({
 
     borderRadius: 6,
   },
+  postBody: {
+    margin: 10,
+  },
   grid: {
     flexGrow: 2,
     flexDirection: "row",
@@ -40,21 +44,25 @@ const useStyles = makeStyles({
 const Friends = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {data, loading} = useSelector(state => state.global);
+  const { data, loading } = useSelector((state) => state.global);
   let history = useHistory();
   let card = [];
 
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
-      const user = (await axios.get(`http://localhost:4000/users/${cookies.get("userId")}`)).data;
+      const user = (
+        await axios.get(`http://localhost:4000/users/${cookies.get("userId")}`)
+      ).data;
       let allPosts = (await axios.get("http://localhost:4000/posts")).data;
       // Using a normal for loop because filter does not use async functions
       let friendPosts = [];
       for (let post of allPosts) {
-        const poster = (await axios.get(`http://localhost:4000/users/user/${post.user}`)).data;
+        const poster = (
+          await axios.get(`http://localhost:4000/users/user/${post.user}`)
+        ).data;
         if (user.friendList.includes(poster._id)) friendPosts.push(post);
-      };
+      }
       dispatch(actions.setData(friendPosts));
       dispatch(actions.setLoading(false));
     }
@@ -91,14 +99,14 @@ const Friends = (props) => {
   };
 
   if (data && Array.isArray(data)) {
-    card = data.map(post => {
-        return buildCard(post);
+    card = data.map((post) => {
+      return buildCard(post);
     });
   }
 
   if (loading || !data || !Array.isArray(data)) {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"
@@ -112,7 +120,7 @@ const Friends = (props) => {
     );
   } else {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"
