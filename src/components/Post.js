@@ -88,6 +88,9 @@ const Post = (props) => {
 
     async function getPostData() {
       dispatch(actions.setLoading(true));
+      axios.post("http://localhost:4000/posts/addView", {
+        postId: props.match.params.id
+      });
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
       );
@@ -200,6 +203,7 @@ const Post = (props) => {
                       }}
                     ></FavoriteBorderIcon>
                   )}
+                  <Typography> {data.data.views} Views</Typography>
                 </CardContent>
               </Card>
             </Grid>

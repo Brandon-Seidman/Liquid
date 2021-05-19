@@ -128,6 +128,20 @@ const setMessage = (message) => ({
     }
 });
 
+const setAnchorEl = (anchorEl) => ({
+    type: 'SET_ANCHOR_EL',
+    payload: {
+        anchorEl: anchorEl
+    }
+});
+
+const setOption = (option) => ({
+    type: 'SET_OPTION',
+    payload: {
+        option: option
+    }
+});
+
 module.exports = {
     setLoading,
     setData,
@@ -147,5 +161,7 @@ module.exports = {
     setYourID,
     clearMessages,
     addMessage,
-    setMessage
+    setMessage,
+    setAnchorEl,
+    setOption
 };
