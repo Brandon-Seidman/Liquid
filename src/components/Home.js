@@ -17,6 +17,9 @@ import {
   Checkbox,
   FormControlLabel,
   TableBody,
+  Button,
+  Menu,
+  MenuItem
 } from "@material-ui/core";
 
 const useStyles = makeStyles({
@@ -42,17 +45,47 @@ const Home = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const {data, loading} = useSelector(state => state.global);
+  const {anchorEl, option} = useSelector(state => state.filter);
   let history = useHistory();
+
+  const HandleClickButton = event => {
+    dispatch(actions.setAnchorEl(event.currentTarget));
+  }
+
+  const HandleChooseFilter = option => {
+    console.log(`Handling option: ${option}`);
+    dispatch(actions.setOption(option));
+    dispatch(actions.setAnchorEl(null));
+  }
 
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
+      dispatch(actions.setOption("all"));
+      dispatch(actions.setAnchorEl(null));
       let newData = await axios.get("http://localhost:4000/posts");
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));
     }
     getData();
   }, []);
+
+  useEffect(() => {
+    async function getData() {
+      dispatch(actions.setLoading(true));
+      let newData;
+      switch (option) {
+        case "all":
+          newData = await axios.get("http://localhost:4000/posts");
+          break;
+        default:
+          newData = await axios.get(`http://localhost:4000/posts/${option}`);
+      }
+      dispatch(actions.setData(newData));
+      dispatch(actions.setLoading(false));
+    }
+    getData();
+  }, [option]);
 
   const buildCard = (post) => {
     return (
@@ -76,6 +109,7 @@ const Home = (props) => {
               </Typography>
               <Typography>Posted By: {post.user}</Typography>
               <Typography>{post.likes} likes</Typography>
+              <Typography>{post.views || 0} views</Typography>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -136,6 +170,17 @@ const Home = (props) => {
   } else {
     return (
       <div className="postsBody">
+        <Button onClick={HandleClickButton}>{`Filter by ${option}`}</Button>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={() => HandleChooseFilter(option)}
+        >
+          <MenuItem onClick={() => HandleChooseFilter("all")}>all</MenuItem>
+          <MenuItem onClick={() => HandleChooseFilter("mostViewed")}>mostViewed</MenuItem>
+          <MenuItem onClick={() => HandleChooseFilter("mostLiked")}>mostLiked</MenuItem>
+        </Menu>
         <Grid
           container
           direction="row"

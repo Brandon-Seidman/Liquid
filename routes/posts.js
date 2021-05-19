@@ -2,6 +2,11 @@ const express = require("express");
 const router = express.Router();
 router.use(express.json());
 
+const bluebird = require('bluebird');
+const redis = require('redis');
+const client = redis.createClient();
+bluebird.promisifyAll(redis.RedisClient.prototype);
+
 const postData = require("../data/posts");
 const commentData = require("../data/comments");
 const userData = require("../data/users");
@@ -16,6 +21,58 @@ router.get("/", async (req, res) => {
     }
 
     res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+router.get("/mostViewed", async (req, res) => {
+  try {
+    let topPosts = await client.zrangebyscoreAsync('views', 0, '+inf');
+
+    if (topPosts.length === 0) {
+      return res.status(404).json({ error: "Looks like there's nothing here yet!" });
+    }
+
+    topPosts = topPosts.reverse().slice(0, 10);
+    
+    result = [];
+    for (let postId of topPosts) {
+      const post = await postData.getPostById(postId);
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      result.push(post);
+    }
+
+    res.status(200).json(result);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+router.get("/mostLiked", async (req, res) => {
+  try {
+    let topPosts = await client.zrangebyscoreAsync('likes', 0, '+inf');
+
+    if (topPosts.length === 0) {
+      return res.status(404).json({ error: "Looks like there's nothing here yet!" });
+    }
+
+    topPosts = topPosts.reverse().slice(0, 10);
+    
+    result = [];
+    for (let postId of topPosts) {
+      const post = await postData.getPostById(postId);
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      result.push(post);
+    }
+
+    res.status(200).json(result);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e });
@@ -68,7 +125,6 @@ router.post("/like", async (req, res) => {
     const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.like(req.body.postId);
     const user = await userData.addPoints(username._id);
-    await userData.like(req.body.userId, req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");
@@ -76,6 +132,10 @@ router.post("/like", async (req, res) => {
     if (!user) {
       return res.status(404).json("User not found");
     }
+
+    await userData.like(req.body.userId, req.body.postId);
+    await client.zincrbyAsync('likes', 1, req.body.postId);
+
     res.status(200);
   } catch (e) {
     console.log(e);
@@ -87,7 +147,6 @@ router.post("/unlike", async (req, res) => {
     const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.unlike(req.body.postId);
     const user = await userData.subPoints(username._id, 1);
-    await userData.unlike(req.body.userId, req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");
@@ -95,10 +154,31 @@ router.post("/unlike", async (req, res) => {
     if (!user) {
       return res.status(404).json("User not found");
     }
+
+    await userData.unlike(req.body.userId, req.body.postId);
+    await client.zincrbyAsync('likes', -1, req.body.postId);
+
     res.status(200);
   } catch (e) {
     console.log(e);
     res.status(500).json({ error: e });
+  }
+});
+router.post("/addView", async (req, res) => {
+  try {
+    const data = await postData.getPostById(req.body.postId);
+
+    if (!data) {
+      return res.status(404).json("Post not found");
+    }
+
+    await postData.addView(req.body.postId);
+    await client.zincrbyAsync('views', 1, req.body.postId);
+
+    return res.status(200);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
   }
 });
 router.post("/liked", async (req, res) => {
@@ -213,6 +293,8 @@ router.post("/post", async (req, res) => {
   }
   try {
     const response = await postData.addpost(user.username, req.body.title, req.body.description, req.body.ingredients);
+    await client.zaddAsync("likes", 0, response._id);
+    await client.zaddAsync("views", 0, response._id);
     res.status(200).json(response);
   } catch (e) {
     console.log(e);
