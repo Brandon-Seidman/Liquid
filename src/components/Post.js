@@ -135,6 +135,7 @@ const Post = (props) => {
 
   const buildCard = (comment) => {
     return (
+	<div className = "full">
       <Grid item>
         <Card variant="outlined">
           <CardContent>
@@ -148,6 +149,7 @@ const Post = (props) => {
           </CardContent>
         </Card>
       </Grid>
+	  </div>
     );
   };
 
@@ -233,7 +235,10 @@ const Post = (props) => {
               </Card>
             </Grid>
 			</div>
+			
             {data.data.comments && card}
+
+			<div className = "full">
             <Grid item>
               <Card variant="outlined">
                 <CardContent>
@@ -270,6 +275,7 @@ const Post = (props) => {
                 </CardContent>
               </Card>
             </Grid>
+			</div>
           </Grid>
         </Grid>
       </div>
