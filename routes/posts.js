@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 router.use(express.json());
 
-const bluebird = require('bluebird');
-const redis = require('redis');
+const bluebird = require("bluebird");
+const redis = require("redis");
 const client = redis.createClient();
 bluebird.promisifyAll(redis.RedisClient.prototype);
 
@@ -29,14 +29,16 @@ router.get("/", async (req, res) => {
 });
 router.get("/mostViewed", async (req, res) => {
   try {
-    let topPosts = await client.zrangebyscoreAsync('views', 0, '+inf');
+    let topPosts = await client.zrangebyscoreAsync("views", 0, "+inf");
 
     if (topPosts.length === 0) {
-      return res.status(404).json({ error: "Looks like there's nothing here yet!" });
+      return res
+        .status(404)
+        .json({ error: "Looks like there's nothing here yet!" });
     }
 
     topPosts = topPosts.reverse().slice(0, 10);
-    
+
     result = [];
     for (let postId of topPosts) {
       const post = await postData.getPostById(postId);
@@ -55,14 +57,16 @@ router.get("/mostViewed", async (req, res) => {
 });
 router.get("/mostLiked", async (req, res) => {
   try {
-    let topPosts = await client.zrangebyscoreAsync('likes', 0, '+inf');
+    let topPosts = await client.zrangebyscoreAsync("likes", 0, "+inf");
 
     if (topPosts.length === 0) {
-      return res.status(404).json({ error: "Looks like there's nothing here yet!" });
+      return res
+        .status(404)
+        .json({ error: "Looks like there's nothing here yet!" });
     }
 
     topPosts = topPosts.reverse().slice(0, 10);
-    
+
     result = [];
     for (let postId of topPosts) {
       const post = await postData.getPostById(postId);
@@ -105,7 +109,10 @@ router.post("/lockedPosts/unlock/", async (req, res) => {
     if (userData2.points < data.points) {
       return res.status(200).json({ response: "insufficient funds" });
     } else {
-      let data2 = await lockedPostData.unlockPost(req.body.postId);
+      let data2 = await lockedPostData.unlockPost(
+        req.body.postId,
+        req.body.userId
+      );
       if (data2.length === 0) {
         res.status(404).json({ error: "I couldn't find that post for you :(" });
         return;
@@ -134,7 +141,7 @@ router.post("/like", async (req, res) => {
     }
 
     await userData.like(req.body.userId, req.body.postId);
-    await client.zincrbyAsync('likes', 1, req.body.postId);
+    await client.zincrbyAsync("likes", 1, req.body.postId);
 
     res.status(200);
   } catch (e) {
@@ -156,7 +163,7 @@ router.post("/unlike", async (req, res) => {
     }
 
     await userData.unlike(req.body.userId, req.body.postId);
-    await client.zincrbyAsync('likes', -1, req.body.postId);
+    await client.zincrbyAsync("likes", -1, req.body.postId);
 
     res.status(200);
   } catch (e) {
@@ -173,7 +180,7 @@ router.post("/addView", async (req, res) => {
     }
 
     await postData.addView(req.body.postId);
-    await client.zincrbyAsync('views', 1, req.body.postId);
+    await client.zincrbyAsync("views", 1, req.body.postId);
 
     return res.status(200);
   } catch (e) {
@@ -246,53 +253,59 @@ router.get("/:id", async (req, res) => {
 
 router.post("/post", async (req, res) => {
   if (typeof req.body.description !== "string") {
-    res.status(400).json({error: "description must be a string"});
+    res.status(400).json({ error: "description must be a string" });
     return;
   }
   if (!req.body.description.trim()) {
-    res.status(400).json({error: "description must not be empty"});
+    res.status(400).json({ error: "description must not be empty" });
     return;
   }
   if (typeof req.body.userId !== "string") {
-    res.status(400).json({error: "posterUsername must be a string"});
+    res.status(400).json({ error: "posterUsername must be a string" });
     return;
   }
   let user;
   try {
     user = await userData.getUserById(req.body.userId);
   } catch (e) {
-    if (e === "User not found") res.status(400).json({error: "invalid userId"});
-    else res.status(500).json({error: e});
+    if (e === "User not found")
+      res.status(400).json({ error: "invalid userId" });
+    else res.status(500).json({ error: e });
     return;
   }
   if (typeof req.body.title !== "string") {
-    res.status(400).json({error: "title must be a string"});
+    res.status(400).json({ error: "title must be a string" });
     return;
   }
   if (!req.body.title.trim()) {
-    res.status(400).json({error: "title must not be empty"});
+    res.status(400).json({ error: "title must not be empty" });
     return;
   }
   if (!Array.isArray(req.body.ingredients)) {
-    res.status(400).json({error: "ingredients must be a array"});
+    res.status(400).json({ error: "ingredients must be a array" });
     return;
   }
   if (req.body.ingredients.length === 0) {
-    res.status(400).json({error: "ingredients must not be empty"});
+    res.status(400).json({ error: "ingredients must not be empty" });
     return;
   }
   for (let ingredient of req.body.ingredients) {
     if (typeof ingredient !== "string") {
-      res.status(400).json({error: "ingredients must all be strings"});
+      res.status(400).json({ error: "ingredients must all be strings" });
       return;
     }
     if (!ingredient.trim()) {
-      res.status(400).json({error: "ingredients must not be empty"});
+      res.status(400).json({ error: "ingredients must not be empty" });
       return;
     }
   }
   try {
-    const response = await postData.addpost(user.username, req.body.title, req.body.description, req.body.ingredients);
+    const response = await postData.addpost(
+      user.username,
+      req.body.title,
+      req.body.description,
+      req.body.ingredients
+    );
     await client.zaddAsync("likes", 0, response._id);
     await client.zaddAsync("views", 0, response._id);
     res.status(200).json(response);
@@ -307,37 +320,43 @@ router.post("/comment/:id", async (req, res) => {
   try {
     await postData.getPostById(req.params.id);
   } catch (e) {
-    if (e === "post not found") res.status(404).json({error: "post not found"});
-    else res.status(500).json({error: "could not load post"});
+    if (e === "post not found")
+      res.status(404).json({ error: "post not found" });
+    else res.status(500).json({ error: "could not load post" });
   }
   if (typeof req.body.commentBy !== "string") {
-    res.status(400).json({error: "username must be a string"});
+    res.status(400).json({ error: "username must be a string" });
     return;
   }
   try {
     await userData.getUserByUsername(req.body.commentBy);
   } catch (e) {
-    if (e === "User not found") res.status(400).json({error: "invalid userId"});
-    else res.status(500).json({error: e});
+    if (e === "User not found")
+      res.status(400).json({ error: "invalid userId" });
+    else res.status(500).json({ error: e });
   }
   if (typeof req.body.title !== "string") {
-    res.status(400).json({error: "comment title must be a string"});
+    res.status(400).json({ error: "comment title must be a string" });
     return;
   }
   if (!req.body.title.trim()) {
-    res.status(400).json({error: "comment title must not be empty"});
+    res.status(400).json({ error: "comment title must not be empty" });
     return;
   }
   if (typeof req.body.description !== "string") {
-    res.status(400).json({error: "comment must be a string"});
+    res.status(400).json({ error: "comment must be a string" });
     return;
   }
   if (!req.body.description.trim()) {
-    res.status(400).json({error: "comment must not be empty"});
+    res.status(400).json({ error: "comment must not be empty" });
     return;
   }
   try {
-    const comment = await commentData.addComment(req.body.commentBy, req.body.description, req.body.title);
+    const comment = await commentData.addComment(
+      req.body.commentBy,
+      req.body.description,
+      req.body.title
+    );
     const response = await postData.addComment(req.params.id, comment._id);
     res.status(200).json(response);
   } catch (e) {
