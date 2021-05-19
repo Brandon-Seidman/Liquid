@@ -98,8 +98,13 @@ const Signup = (props) => {
           .catch((err) => {
             console.log(err);
           });
-        cookies.set("userId", user._id);
-        history.push("/");
+        await cookies.set("userId", user.data._id, { path: "/" });
+        while (1) {
+          if (cookies.get("userId") == user.data._id) {
+            window.location.href = window.location.href;
+            break;
+          }
+        }
       } else if (signup.data.username === "taken") {
         dispatch(actions.setUsernameTakenError(true));
         return;
