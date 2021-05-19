@@ -89,6 +89,13 @@ const Signup = (props) => {
         return;
       }
       dispatch(actions.setFormLoading(true));
+      try{
+        await signupauth(values.email, values.password)
+      } catch (e) {
+        dispatch(actions.setError(true));
+        dispatch(actions.setFormLoading(false));
+        return;
+      }
       let signup = await axios
         .post("http://localhost:4000/users/signup", {
           data: { username: values.username, password: values.password },
@@ -99,13 +106,6 @@ const Signup = (props) => {
 
 
       if (signup.data.username === "added") {
-        try{
-          await signupauth(values.email, values.password)
-        } catch (e) {
-          dispatch(actions.setError(true));
-          dispatch(actions.setFormLoading(false));
-          return;
-        }
         let user = await axios
           .get("http://localhost:4000/users/user/" + values.username)
           .catch((err) => {
