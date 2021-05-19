@@ -4,6 +4,7 @@ import { useHistory, withRouter } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import { useAuth } from "../contexts/AuthContext";
 
 import { Link } from "react-router-dom";
 import {
@@ -58,10 +59,12 @@ const Signup = (props) => {
   const { passwordError, passwordLengthError, usernameTakenError } =
     useSelector((state) => state.signup);
   let history = useHistory();
+  const { signupauth } = useAuth();
 
   useEffect(() => {
     dispatch(
       actions.setValues({
+        email: "",
         username: "",
         password: "",
         rePassword: "",
@@ -80,15 +83,27 @@ const Signup = (props) => {
         dispatch(actions.setPasswordLengthError(false));
         return;
       }
-      if (values.password.length < 5) {
+      if (values.password.length < 6) {
         dispatch(actions.setPasswordLengthError(true));
         dispatch(actions.setPasswordError(false));
         return;
       }
       dispatch(actions.setFormLoading(true));
+      try {
+        await signupauth(values.email, values.password);
+      } catch (e) {
+        dispatch(actions.setError(true));
+        dispatch(actions.setFormLoading(false));
+        console.log(e);
+        return;
+      }
       let signup = await axios
         .post("http://localhost:4000/users/signup", {
-          data: { username: values.username, password: values.password },
+          data: {
+            username: values.username,
+            password: values.password,
+            email: values.email,
+          },
         })
         .catch((err) => {
           console.log(err);
@@ -96,7 +111,7 @@ const Signup = (props) => {
 
       if (signup.data.username === "added") {
         let user = await axios
-          .get("http://localhost:4000/users/user/" + values.username)
+          .get("http://localhost:4000/users/email/" + values.email)
           .catch((err) => {
             console.log(err);
           });
@@ -140,6 +155,16 @@ const Signup = (props) => {
           </Typography>
           <form id="login-form">
             <TextField
+              value={values.email}
+              onChange={set("email")}
+              id="email"
+              label="Email"
+              type="email"
+            />
+            <br />
+            <br />
+            <br />
+            <TextField
               value={values.username}
               onChange={set("username")}
               id="username"
@@ -173,11 +198,7 @@ const Signup = (props) => {
           <Link className="Link" to="/login">
             Already have an account? Login here!
           </Link>
-          {formLoading && (
-            <Typography>
-              Signing up...
-            </Typography>
-          )}
+          {formLoading && <Typography>Signing up...</Typography>}
           {error && (
             <Typography className={classes.error}>
               Oh no! Something went wrong :(
@@ -190,14 +211,14 @@ const Signup = (props) => {
           )}
           {passwordLengthError && (
             <Typography className={classes.error}>
-              Password must be at least 5 characters
+              Password must be at least 6 characters
             </Typography>
           )}
           {usernameTakenError && (
             <Typography className={classes.error}>
               Username already taken :(
             </Typography>
-          )}
+          )}{" "}
         </CardContent>
       </Card>
     </div>
