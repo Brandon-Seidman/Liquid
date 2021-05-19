@@ -53,7 +53,7 @@ const useStyles = makeStyles({
 const Signup = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { values } = useSelector((state) => state.form);
+  const { values, formLoading } = useSelector((state) => state.form);
   const { error } = useSelector((state) => state.global);
   const { passwordError, passwordLengthError, usernameTakenError } =
     useSelector((state) => state.signup);
@@ -69,6 +69,7 @@ const Signup = (props) => {
     );
     dispatch(actions.setError(false));
     dispatch(actions.clearSignupErrors());
+    dispatch(actions.setFormLoading(false));
   }, []);
 
   async function HandleSubmit(event) {
@@ -84,6 +85,7 @@ const Signup = (props) => {
         dispatch(actions.setPasswordError(false));
         return;
       }
+      dispatch(actions.setFormLoading(true));
       let signup = await axios
         .post("http://localhost:4000/users/signup", {
           data: { username: values.username, password: values.password },
@@ -107,13 +109,16 @@ const Signup = (props) => {
         }
       } else if (signup.data.username === "taken") {
         dispatch(actions.setUsernameTakenError(true));
+        dispatch(actions.setFormLoading(false));
         return;
       } else {
         dispatch(actions.setError(true));
+        dispatch(actions.setFormLoading(false));
         return;
       }
     } catch (e) {
       dispatch(actions.setError(true));
+      dispatch(actions.setFormLoading(false));
     }
   }
   const set = (name) => {
@@ -168,6 +173,11 @@ const Signup = (props) => {
           <Link className="Link" to="/login">
             Already have an account? Login here!
           </Link>
+          {formLoading && (
+            <Typography>
+              Signing up...
+            </Typography>
+          )}
           {error && (
             <Typography className={classes.error}>
               Oh no! Something went wrong :(
