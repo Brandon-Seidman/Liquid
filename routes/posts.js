@@ -293,6 +293,8 @@ router.post("/post", async (req, res) => {
   }
   try {
     const response = await postData.addpost(user.username, req.body.title, req.body.description, req.body.ingredients);
+    await client.zaddAsync("likes", 0, response._id);
+    await client.zaddAsync("views", 0, response._id);
     res.status(200).json(response);
   } catch (e) {
     console.log(e);
