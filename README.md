@@ -15,8 +15,8 @@ Step 4
 		  password: ihavesomanyprojects
 
 # Mixpanel Note
-- We know that tracking works with Microsoft Edge but are unsure with other browsers,
-if you want Mixpanel to track your movements you'll have to use Microsoft Edge
+- We know that tracking works with Microsoft Edge, Google Chrome, and safari but are unsure with other browsers,
+if you want Mixpanel to track your movements you'll have to use one of these browsers.
 
 # Login to mixpanel to view tracking
 Email: liquidappteam@gmail.com
