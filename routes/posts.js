@@ -2,6 +2,11 @@ const express = require("express");
 const router = express.Router();
 router.use(express.json());
 
+const bluebird = require('bluebird');
+const redis = require('redis');
+const client = redis.createClient();
+bluebird.promisifyAll(redis.RedisClient.prototype);
+
 const postData = require("../data/posts");
 const commentData = require("../data/comments");
 const userData = require("../data/users");
@@ -76,6 +81,9 @@ router.post("/like", async (req, res) => {
     if (!user) {
       return res.status(404).json("User not found");
     }
+
+    await client.zincrbyAsync('likes', 1, req.body.postId);
+
     res.status(200);
   } catch (e) {
     console.log(e);
@@ -95,6 +103,9 @@ router.post("/unlike", async (req, res) => {
     if (!user) {
       return res.status(404).json("User not found");
     }
+
+    await client.zincrbyAsync('likes', -1, req.body.postId);
+
     res.status(200);
   } catch (e) {
     console.log(e);
@@ -103,11 +114,14 @@ router.post("/unlike", async (req, res) => {
 });
 router.post("/addView", async (req, res) => {
   try {
-    const post = await postData.addView(req.body.postId);
+    await postData.addView(req.body.postId);
 
     if (!post) {
       return res.status(404).json("Post not found");
     }
+
+    await client.zincrbyAsync('views', 1, req.body.postId);
+
     return res.status(200);
   } catch (e) {
     console.log(e);
