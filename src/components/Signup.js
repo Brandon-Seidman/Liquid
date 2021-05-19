@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
 import { useAuth } from "../contexts/AuthContext";
+import Mixpanel from "../mixpanel";
 
 import { Link } from "react-router-dom";
 import {
@@ -116,6 +117,11 @@ const Signup = (props) => {
             console.log(err);
           });
         await cookies.set("userId", user.data._id, { path: "/" });
+        Mixpanel.setPerson({ 
+          signUpDate: new Date(),
+          USER_ID: user.data.username
+        });
+        Mixpanel.identify(user.data.username);
         while (1) {
           if (cookies.get("userId") == user.data._id) {
             window.location.href = window.location.href;

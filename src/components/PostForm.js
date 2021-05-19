@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import Mixpanel from "../mixpanel";
 import {
   Card,
   CardContent,
@@ -71,6 +72,7 @@ const PostForm = (props) => {
         description: values.description.trim(),
         ingredients: ingredients,
       });
+      Mixpanel.track("Posted a Liquid", {});
       window.location.href = window.location.href.slice(
         0,
         window.location.href.length - 4

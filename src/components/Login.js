@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
 import { useAuth } from "../contexts/AuthContext";
+import Mixpanel from "../mixpanel";
 
 import { Link } from "react-router-dom";
 import {
@@ -88,6 +89,9 @@ const Login = (props) => {
           return;
         }
         await cookies.set("userId", user.data._id, { path: "/" });
+        Mixpanel.setPerson({USER_ID: user.data.username});
+        Mixpanel.identify(user.data.username);
+        Mixpanel.track("Login", {});
         window.location.href = window.location.href;
       } else {
         dispatch(actions.setError(true));
