@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
 });
 router.get("/mostViewed", async (req, res) => {
   try {
-    let topPosts = await client.zrangebyscore('views', 0, '+inf');
+    let topPosts = await client.zrangebyscoreAsync('views', 0, '+inf');
 
     if (topPosts.length === 0) {
       return res.status(404).json({ error: "Looks like there's nothing here yet!" });
@@ -55,7 +55,7 @@ router.get("/mostViewed", async (req, res) => {
 });
 router.get("/mostLiked", async (req, res) => {
   try {
-    let topPosts = await client.zrangebyscore('likes', 0, '+inf');
+    let topPosts = await client.zrangebyscoreAsync('likes', 0, '+inf');
 
     if (topPosts.length === 0) {
       return res.status(404).json({ error: "Looks like there's nothing here yet!" });

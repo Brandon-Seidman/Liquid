@@ -10,7 +10,7 @@ const filterReducer = (state = initialState, action) => {
         case "SET_ANCHOR_EL":
             return {...state, anchorEl: payload.anchorEl};
         case "SET_OPTION":
-            return {...state, index: payload.option};
+            return {...state, option: payload.option};
         default:
             return state;
     }
