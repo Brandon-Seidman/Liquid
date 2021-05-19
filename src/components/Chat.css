@@ -34,9 +34,8 @@
   color: white;
   letter-spacing: 1px;
   line-height: 20px;
-  ::placeholder {
-    color: lightgray;
-  }
+
+  color: lightgray;
 }
 
 .b {
