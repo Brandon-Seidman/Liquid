@@ -56,6 +56,8 @@ router.get("/mostViewed", async (req, res) => {
 router.get("/mostLiked", async (req, res) => {
   try {
     let topPosts = await client.zrangebyscoreAsync('likes', 0, '+inf');
+    console.log("Most Liked:");
+    console.log(topPosts);
 
     if (topPosts.length === 0) {
       return res.status(404).json({ error: "Looks like there's nothing here yet!" });
@@ -166,7 +168,7 @@ router.post("/unlike", async (req, res) => {
 });
 router.post("/addView", async (req, res) => {
   try {
-    const data = await postData.unlike(req.body.postId);
+    const data = await postData.getPostById(req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");

@@ -109,6 +109,7 @@ const Home = (props) => {
               </Typography>
               <Typography>Posted By: {post.user}</Typography>
               <Typography>{post.likes} likes</Typography>
+              <Typography>{post.views || 0} views</Typography>
             </CardContent>
           </CardActionArea>
         </Card>
