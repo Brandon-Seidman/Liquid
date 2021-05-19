@@ -27,6 +27,58 @@ router.get("/", async (req, res) => {
     return;
   }
 });
+router.get("/mostViewed", async (req, res) => {
+  try {
+    let topPosts = await client.zrangebyscore('views', 0, '+inf');
+
+    if (topPosts.length === 0) {
+      return res.status(404).json({ error: "Looks like there's nothing here yet!" });
+    }
+
+    topPosts = topPosts.reverse().slice(0, 10);
+    
+    result = [];
+    for (let postId of topPosts) {
+      const post = await postData.getPostById(postId);
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      result.push(post);
+    }
+
+    res.status(200).json(result);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
+router.get("/mostLiked", async (req, res) => {
+  try {
+    let topPosts = await client.zrangebyscore('likes', 0, '+inf');
+
+    if (topPosts.length === 0) {
+      return res.status(404).json({ error: "Looks like there's nothing here yet!" });
+    }
+
+    topPosts = topPosts.reverse().slice(0, 10);
+    
+    result = [];
+    for (let postId of topPosts) {
+      const post = await postData.getPostById(postId);
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      result.push(post);
+    }
+
+    res.status(200).json(result);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
 router.get("/lockedPosts", async (req, res) => {
   try {
     let data = await lockedPostData.getAllPosts();
