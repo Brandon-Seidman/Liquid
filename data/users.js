@@ -153,13 +153,14 @@ let exportedMethods = {
       if (!id) throw "Error: ID must be supplied";
 
       const user = await this.getUserById(id);
-      user.likes.push(likeId);
+      let new_likes = user.likes.filter(postId => postId !== likeId);
+      new_likes.push(likeId);
       const userUpdateInfo = {
         username: user.username,
         password: user.password,
         friendList: user.friendList,
         posts: user.posts,
-        likes: user.likes,
+        likes: new_likes,
         points: user.points,
       };
       const userCollection = await users();
@@ -180,14 +181,13 @@ let exportedMethods = {
     try {
       if (!id) throw "Error: ID must be supplied";
       const user = await this.getUserById(id);
-      let index = user.likes.indexOf(likeId);
-      user.likes.splice(index, 1);
+      const new_likes = user.likes.filter(postId => postId !== likeId);
       const userUpdateInfo = {
         username: user.username,
         password: user.password,
         friendList: user.friendList,
         posts: user.posts,
-        likes: user.likes,
+        likes: new_likes,
         points: user.points,
       };
       const userCollection = await users();
