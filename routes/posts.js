@@ -73,7 +73,6 @@ router.post("/like", async (req, res) => {
     const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.like(req.body.postId);
     const user = await userData.addPoints(username._id);
-    await userData.like(req.body.userId, req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");
@@ -82,6 +81,7 @@ router.post("/like", async (req, res) => {
       return res.status(404).json("User not found");
     }
 
+    await userData.like(req.body.userId, req.body.postId);
     await client.zincrbyAsync('likes', 1, req.body.postId);
 
     res.status(200);
@@ -95,7 +95,6 @@ router.post("/unlike", async (req, res) => {
     const username = await userData.getUserByUsername(req.body.username);
     const data = await postData.unlike(req.body.postId);
     const user = await userData.subPoints(username._id, 1);
-    await userData.unlike(req.body.userId, req.body.postId);
 
     if (!data) {
       return res.status(404).json("Post not found");
@@ -104,6 +103,7 @@ router.post("/unlike", async (req, res) => {
       return res.status(404).json("User not found");
     }
 
+    await userData.unlike(req.body.userId, req.body.postId);
     await client.zincrbyAsync('likes', -1, req.body.postId);
 
     res.status(200);
@@ -114,12 +114,13 @@ router.post("/unlike", async (req, res) => {
 });
 router.post("/addView", async (req, res) => {
   try {
-    await postData.addView(req.body.postId);
+    const data = await postData.unlike(req.body.postId);
 
-    if (!post) {
+    if (!data) {
       return res.status(404).json("Post not found");
     }
 
+    await postData.addView(req.body.postId);
     await client.zincrbyAsync('views', 1, req.body.postId);
 
     return res.status(200);
