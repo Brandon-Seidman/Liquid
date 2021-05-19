@@ -4,6 +4,7 @@ import { useHistory, withRouter } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import { useAuth } from '../contexts/AuthContext'
 
 import { Link } from "react-router-dom";
 import {
@@ -58,10 +59,12 @@ const Signup = (props) => {
   const { passwordError, passwordLengthError, usernameTakenError } =
     useSelector((state) => state.signup);
   let history = useHistory();
+  const { signupauth } = useAuth();
 
   useEffect(() => {
     dispatch(
       actions.setValues({
+        email: "",
         username: "",
         password: "",
         rePassword: "",
@@ -93,6 +96,13 @@ const Signup = (props) => {
         .catch((err) => {
           console.log(err);
         });
+      try{
+        await signupauth(values.email, values.password)
+      } catch (e) {
+        dispatch(actions.setError(true));
+        dispatch(actions.setFormLoading(false));
+      }
+
 
       if (signup.data.username === "added") {
         let user = await axios
@@ -139,6 +149,16 @@ const Signup = (props) => {
             Signup!
           </Typography>
           <form id="login-form">
+            <TextField
+              value={values.email}
+              onChange={set("email")}
+              id="email"
+              label="Email"
+              type="email"
+            />
+            <br />
+            <br />
+            <br />
             <TextField
               value={values.username}
               onChange={set("username")}

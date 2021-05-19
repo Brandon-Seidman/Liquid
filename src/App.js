@@ -14,13 +14,15 @@ import Chat from "./components/Chat";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { AuthProvider } from "./contexts/AuthContext"
 
 const App = () => {
   let history = useHistory();
   const cookies = new Cookies();
-  
+
   if (cookies.get("userId")) {
     return (
+      <AuthProvider>
       <Router>
         <div className="header">
           <header>
@@ -32,8 +34,8 @@ const App = () => {
                   alt="Liquid Logo"
                 />
             </CardActionArea>
-			
-			 <div className="links"> 
+
+			 <div className="links">
             <CardActionArea
               onClick={(event) => {
                 event.preventDefault();
@@ -44,7 +46,7 @@ const App = () => {
 			<CardContent> Logout </CardContent>
             </CardActionArea>
 			</div>
-			
+
 			<div className="links">
             <CardActionArea href="/my-page">
               <CardContent> My Page </CardContent>
@@ -56,25 +58,25 @@ const App = () => {
               <CardContent> Friends' Posts </CardContent>
             </CardActionArea>
 			</div>
-			
+
 			<div className="links">
             <CardActionArea href="/store">
               <CardContent> Liquid Store </CardContent>
             </CardActionArea>
 			</div>
-			
+
 			<div className="links">
             <CardActionArea href="/post">
               <CardContent> Post a Liquid! </CardContent>
             </CardActionArea>
 			</div>
-			
+
 			<div className="links">
             <CardActionArea href="/chat">
               <CardContent> Chat </CardContent>
             </CardActionArea>
 			</div>
-			
+
           </header>
         </div>
         <br />
@@ -94,9 +96,11 @@ const App = () => {
         }
         <script src="tota11y.min.js"></script>
       </Router>
+      </AuthProvider>
     );
   } else {
     return (
+      <AuthProvider>
       <Router>
         <div className="header">
           <header>
@@ -123,6 +127,7 @@ const App = () => {
         }
         <script src="tota11y.min.js"></script>
       </Router>
+      </AuthProvider>
     );
   }
 };
