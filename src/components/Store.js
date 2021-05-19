@@ -38,6 +38,8 @@ const useStyles = makeStyles({
   },
   error: {
     color: "red",
+    marginLeft: 400,
+    fontSize: 44,
   },
 });
 const cookies = new Cookies();
@@ -57,7 +59,9 @@ const Store = (props) => {
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
+
       let newData = await axios.get("http://localhost:4000/posts/lockedPosts");
+      console.log(newData);
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));
     }
@@ -80,60 +84,56 @@ const Store = (props) => {
 
   const buildCard = (post) => {
     return (
-	<div className = "full">
-      <Grid item>
-        {post.unlocked && (
-          <Card variant="outlined">
-		  <div className = "card">
-            <CardContent>
-			<div className = "title">
-              <Typography gutterBottom variant="h3" component="h2">
-                {post.title}
-              </Typography>
-			  </div>
-              <Typography gutterBottom variant="h6" component="h3">
-                {post.description}
-              </Typography>
-              <Typography>
-                Ingredients Needed:
-                {post.ingredients.map((ingredients) => {
-                  return <li>{ingredients}</li>;
-                })}
-              </Typography>
-              <Typography>Posted By: Liquid Guru</Typography>  
-            </CardContent>
-			</div>
-          </Card>
-        )}
-        {!post.unlocked && (
-          <Card variant="outlined">
-		  <div className = "card">
-            <CardContent>
-			<div className = "title">
-              <Typography gutterBottom variant="h3" component="h2">
-                {post.title}
-              </Typography>
-			  </div>
-			  <div className = "title">
-              <Typography gutterBottom variant="h6" component="h3">
-                {post.points}
-              </Typography>
-			  </div>
-              <Button onClick={() => handleUnlock(post._id)}>
-                Unlock Now!
-              </Button>
-              {error && (
-                <Typography className={classes.error}>
-                  Insufficient funds :({" "}
-                </Typography>
-              )}
-              <Typography>Posted By: Liquid Guru</Typography>
-            </CardContent>
-			 </div>
-          </Card>
-        )}
-      </Grid>
-	  </div>
+      <div className="full">
+        <Grid item>
+          {post.unlocked.includes(cookies.get("userId")) && (
+            <Card variant="outlined">
+              <div className="card">
+                <CardContent>
+                  <div className="title">
+                    <Typography gutterBottom variant="h3" component="h2">
+                      {post.title}
+                    </Typography>
+                  </div>
+                  <Typography gutterBottom variant="h6" component="h3">
+                    {post.description}
+                  </Typography>
+                  <Typography>
+                    Ingredients Needed:
+                    {post.ingredients.map((ingredients) => {
+                      return <li>{ingredients}</li>;
+                    })}
+                  </Typography>
+                  <Typography>Posted By: Liquid Guru</Typography>
+                </CardContent>
+              </div>
+            </Card>
+          )}
+          {!post.unlocked.includes(cookies.get("userId")) && (
+            <Card variant="outlined">
+              <div className="card">
+                <CardContent>
+                  <div className="title">
+                    <Typography gutterBottom variant="h3" component="h2">
+                      {post.title}
+                    </Typography>
+                  </div>
+                  <div className="title">
+                    <Typography gutterBottom variant="h6" component="h3">
+                      {post.points}
+                    </Typography>
+                  </div>
+                  <Button onClick={() => handleUnlock(post._id)}>
+                    Unlock Now!
+                  </Button>
+
+                  <Typography>Posted By: Liquid Guru</Typography>
+                </CardContent>
+              </div>
+            </Card>
+          )}
+        </Grid>
+      </div>
     );
   };
 
@@ -161,6 +161,11 @@ const Store = (props) => {
   } else {
     return (
       <div className={classes.postBody}>
+        {error && (
+          <Typography className={classes.error}>
+            Insufficient funds :({" "}
+          </Typography>
+        )}
         <Grid
           container
           direction="row"
