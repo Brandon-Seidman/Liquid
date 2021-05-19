@@ -83,7 +83,7 @@ const Signup = (props) => {
         dispatch(actions.setPasswordLengthError(false));
         return;
       }
-      if (values.password.length < 5) {
+      if (values.password.length < 6) {
         dispatch(actions.setPasswordLengthError(true));
         dispatch(actions.setPasswordError(false));
         return;
@@ -210,7 +210,7 @@ const Signup = (props) => {
           )}
           {passwordLengthError && (
             <Typography className={classes.error}>
-              Password must be at least 5 characters
+              Password must be at least 6 characters
             </Typography>
           )}
           {usernameTakenError && (
