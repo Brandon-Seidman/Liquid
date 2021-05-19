@@ -1,6 +1,6 @@
 const initialState = {
     anchorEl: null,
-    index: 1
+    option: "all"
 };
 
 const filterReducer = (state = initialState, action) => {
@@ -9,8 +9,8 @@ const filterReducer = (state = initialState, action) => {
     switch (type) {
         case "SET_ANCHOR_EL":
             return {...state, anchorEl: payload.anchorEl};
-        case "SET_INDEX":
-            return {...state, index: payload.index};
+        case "SET_OPTION":
+            return {...state, index: payload.option};
         default:
             return state;
     }

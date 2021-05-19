@@ -135,10 +135,10 @@ const setAnchorEl = (anchorEl) => ({
     }
 });
 
-const setIndex = (index) => ({
-    type: 'SET_INDEX',
+const setOption = (option) => ({
+    type: 'SET_OPTION',
     payload: {
-        index: index
+        option: option
     }
 });
 
@@ -163,5 +163,5 @@ module.exports = {
     addMessage,
     setMessage,
     setAnchorEl,
-    setIndex
+    setOption
 };
