@@ -13,22 +13,26 @@ async function main() {
   await db.dropDatabase();
 
   // GENERATE NEW USER WITH ENCRYPTED PASSWORD
-  async function create(username, password) {
+  async function create(email, username, password) {
     let saltRounds = 10;
     let hash = await bcrypt.hash(password, saltRounds);
-    let newUser = await userData.addUser(username, hash);
+    let newUser = await userData.addUser(email, username, hash);
     return newUser;
   }
 
   // POPULATE DATABASE WITH NEW USERS
 
-  await create("shannonhobby", "ihavesomanyprojects");
-  await create("scottrocks", "imchillin");
-  await create("brandyman", "metoo");
-  await create("jasonscool", "yeahyousuckshannon");
-  await create("jodycourtois", "pancake");
-  await create("bretsteiner", "pancakewithsyrup");
-  await create("beepboop", "boopbeep");
+  await create(
+    "shannonhobby1@hotmail.com",
+    "shannonhobby",
+    "ihavesomanyprojects"
+  );
+  await create("scottrocks@gmail.com", "scottrocks", "imchillin");
+  await create("liquidappteam@gmail.com", "brandyman", "metoo");
+  await create("jasonscool@gmail.com", "jasonscool", "yeahyousuckshannon");
+  await create("jodycourtois@gmail.com", "jodycourtois", "pancake");
+  await create("bretsteiner@gmail.com", "bretsteiner", "pancakewithsyrup");
+  await create("beepboop@gmail.com", "beepboop", "boopbeep");
   const userArray = await userData.getAllUsers();
 
   // posts

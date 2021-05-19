@@ -8,6 +8,23 @@ const userData = data.users;
 const router = express.Router();
 router.use(express.json());
 
+router.get("/email/:email", async (req, res) => {
+  try {
+    if (!req.params.email || !req.params.email.trim()) {
+      return res.status(404).json({ error: "No email received " });
+    }
+    let data = await userData.getUserByEmail(req.params.email);
+
+    if (!data) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: e });
+    return;
+  }
+});
 router.get("/user/:username", async (req, res) => {
   try {
     if (!req.params.username || !req.params.username.trim()) {
@@ -44,10 +61,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-async function create(username, password) {
+async function create(email, username, password) {
   let saltRounds = 10;
   let hash = await bcrypt.hash(password, saltRounds);
-  let newUser = await userData.addUser(username, hash);
+  let newUser = await userData.addUser(email, username, hash);
   return newUser;
 }
 router.post("/signup", async (req, res) => {
@@ -55,7 +72,15 @@ router.post("/signup", async (req, res) => {
     const { data } = req.body;
     const username = data.username;
     const password = data.password;
-    if (!username || !username.trim() || !password || !password.trim()) {
+    const email = data.email;
+    if (
+      !username ||
+      !username.trim() ||
+      !password ||
+      !password.trim() ||
+      !email ||
+      !email.trim()
+    ) {
       throw "Error: No username or password received";
     }
     const users = await userData.getAllUsers();
@@ -64,7 +89,7 @@ router.post("/signup", async (req, res) => {
       if (users[i].username.toLowerCase() === username)
         return res.status(200).json({ username: "taken" });
     }
-    let user = await create(username, password);
+    let user = await create(email, username, password);
     if (!user) {
       return res
         .status(404)
@@ -79,10 +104,10 @@ router.post("/signup", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const { data } = req.body;
-    const username = data.username;
+    const email = data.email;
     const password = data.password;
-    if (!username || !username.trim() || !password || !password.trim()) {
-      throw "Error: No username or password received";
+    if (!email || !email.trim() || !password || !password.trim()) {
+      throw "Error: No email or password received";
     }
     const users = await userData.getAllUsers();
     if (users.length === 0) {
@@ -91,8 +116,7 @@ router.post("/", async (req, res) => {
     let hashedPassword = "";
     let user;
     for (let i = 0; i < users.length; i++) {
-      if (users[i].username.toLowerCase() === username)
-        hashedPassword = users[i].password;
+      if (users[i].email === email) hashedPassword = users[i].password;
       user = users[i];
     }
     if (hashedPassword === "") {
@@ -105,7 +129,7 @@ router.post("/", async (req, res) => {
         return res.status(401).json({ password: "Wrong password :(" });
       }
       if (response) {
-        //res.cookie("AuthCookie", username);
+        //res.cookie("AuthCookie", email);
         return res.status(200).json({ password: "Correct" });
 
         return;
