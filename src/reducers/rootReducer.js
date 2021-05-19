@@ -7,6 +7,7 @@ import storeReducer from './storeReducer';
 import userReducer from './userReducer';
 import signupReducer from './signupReducer';
 import chatReducer from './chatReducer';
+import filterReducer from './filterReducer';
 
 const rootReducer = combineReducers({
     form: formReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     store: storeReducer,
     user: userReducer,
     signup: signupReducer,
-    chat: chatReducer
+    chat: chatReducer,
+    filter: filterReducer
 });
 
 export default rootReducer;
