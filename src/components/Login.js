@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth } from "../contexts/AuthContext";
 
 import { Link } from "react-router-dom";
 import {
@@ -72,16 +72,16 @@ const Login = (props) => {
     try {
       dispatch(actions.setFormLoading(true));
       let login = await axios.post("http://localhost:4000/users", {
-        data: { username: values.username, password: values.password },
+        data: { email: values.email, password: values.password },
       });
 
       let user = await axios.get(
-        "http://localhost:4000/users/user/" + values.username
+        "http://localhost:4000/users/email/" + values.email
       );
 
       if (login.data.password === "Correct") {
-        try{
-          await loginauth(values.email, values.password)
+        try {
+          await loginauth(values.email, values.password);
         } catch (e) {
           dispatch(actions.setError(true));
           dispatch(actions.setFormLoading(false));
@@ -115,52 +115,42 @@ const Login = (props) => {
             <Typography gutterBottom variant="h6" component="h3">
               {" "}
               Login
-          </Typography>
-          <form id="login-form">
-            <TextField
-              value={values.email}
-              onChange={set("email")}
-              id="email"
-              label="Email"
-              type="email"
-            />
-            <br />
-            <br />
-            <br />
-            <TextField
-              value={values.username}
-              onChange={set("username")}
-              id="username"
-              label="Username"
-            />
-            <br />
-            <br />
-            <br />
-            <TextField
-              value={values.password}
-              onChange={set("password")}
-              id="password"
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-            />
-            <br />
-            <br />
-            <br />
-
-            <Button onClick={HandleLogin}>Submit</Button>
-          </form>
-          <Link className="Link" to="/signup">
-            Don't have an account yet? Sign up here!
-          </Link>
-          {formLoading && (
-            <Typography className={classes.error}>
-              Logging in...
             </Typography>
-          )}
-          {error && (
-            <Typography className={classes.error}>
-              Invalid Username or Password
+            <form id="login-form">
+              <TextField
+                value={values.email}
+                onChange={set("email")}
+                id="email"
+                label="Email"
+                type="email"
+              />
+
+              <br />
+              <br />
+              <br />
+              <TextField
+                value={values.password}
+                onChange={set("password")}
+                id="password"
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+              />
+              <br />
+              <br />
+              <br />
+
+              <Button onClick={HandleLogin}>Submit</Button>
+            </form>
+            <Link className="Link" to="/signup">
+              Don't have an account yet? Sign up here!
+            </Link>
+            {formLoading && (
+              <Typography className={classes.error}>Logging in...</Typography>
+            )}
+            {error && (
+              <Typography className={classes.error}>
+                Invalid Email or Password
               </Typography>
             )}
           </CardContent>

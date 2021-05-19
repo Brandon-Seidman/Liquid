@@ -22,19 +22,27 @@ let exportedMethods = {
     if (!user) throw "User not found";
     return user;
   },
+  async getUserByEmail(email) {
+    const userCollection = await users();
+    const user = await userCollection.findOne({ email: email });
+    if (!user) throw "User not found";
+    return user;
+  },
 
-  async addUser(username, password) {
+  async addUser(email, username, password) {
     const userCollection = await users();
 
-    if (!username || !password)
+    if (!username || !password || !email)
       throw "Please provide all data when creating a user";
 
     if (typeof username !== "string") throw "username must be a string";
     if (typeof password !== "string") throw "password must be a string";
+    if (typeof email !== "string") throw "email must be a string";
 
     let newUser = {
       username: username.toLowerCase(),
       password: password,
+      email: email,
       friendList: [],
       posts: [],
       likes: [],
@@ -153,7 +161,7 @@ let exportedMethods = {
       if (!id) throw "Error: ID must be supplied";
 
       const user = await this.getUserById(id);
-      let new_likes = user.likes.filter(postId => postId !== likeId);
+      let new_likes = user.likes.filter((postId) => postId !== likeId);
       new_likes.push(likeId);
       const userUpdateInfo = {
         username: user.username,
@@ -181,7 +189,7 @@ let exportedMethods = {
     try {
       if (!id) throw "Error: ID must be supplied";
       const user = await this.getUserById(id);
-      const new_likes = user.likes.filter(postId => postId !== likeId);
+      const new_likes = user.likes.filter((postId) => postId !== likeId);
       const userUpdateInfo = {
         username: user.username,
         password: user.password,
