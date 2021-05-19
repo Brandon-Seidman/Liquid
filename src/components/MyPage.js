@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import Mixpanel from "../mixpanel";
 import {
   Card,
   CardActionArea,
@@ -66,7 +67,10 @@ const MyPage = (props) => {
       <Grid item>
         <Card variant="outlined">
           <CardActionArea
-            onClick={(event) => history.push("/post/" + post._id)}
+            onClick={(event) => {
+              history.push("/post/" + post._id);
+              Mixpanel.track("View Liked Post", { poster: post.user });
+            }}
           >
 		  <div className = "card">
             <CardContent>
