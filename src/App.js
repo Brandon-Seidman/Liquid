@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -15,12 +15,11 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { AuthProvider } from "./contexts/AuthContext"
-import { useAuth } from './contexts/AuthContext'
+
 
 const App = () => {
   let history = useHistory();
   const cookies = new Cookies();
-  const {currentUser, logout} = useAuth();
 
   if (cookies.get("userId")) {
     return (
