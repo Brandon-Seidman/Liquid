@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import Mixpanel from "../mixpanel";
 
 import {
   Card,
@@ -73,6 +74,7 @@ const Store = (props) => {
     );
     if (unlockedData.data.response === "success") {
       dispatch(actions.setUnlock(true));
+      Mixpanel.track("Unlocked Signature Post", {});
     } else if (unlockedData.data.response === "insufficient funds") {
       dispatch(actions.setError(true));
     }

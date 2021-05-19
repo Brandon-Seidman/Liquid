@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
+import Mixpanel from "../mixpanel";
 
 import {
   Card,
@@ -65,6 +66,7 @@ const Post = (props) => {
           description: values.description.trim(),
         }
       );
+      Mixpanel.track("Commented on Post", { poster: data.data.user });
       window.location.href = window.location.href;
     } catch (e) {
       console.log(e);
@@ -83,6 +85,13 @@ const Post = (props) => {
           poster._id
         }`
       );
+      
+      if (isFriend) {
+        Mixpanel.track("Unfriended User", { user: data.data.user });
+      } else {
+        Mixpanel.track("Friended User", { user: data.data.user });
+      }
+
       dispatch(actions.setIsFriend(!isFriend));
     } catch (e) {
       console.log(e);
@@ -212,6 +221,7 @@ const Post = (props) => {
                           userId: cookies.get("userId"),
                           postId: props.match.params.id,
                         });
+                        Mixpanel.track("Unliked Post", { poster: data.data.user });
                       }}
                     ></FavoriteIcon>
                   )}
@@ -226,6 +236,7 @@ const Post = (props) => {
                           userId: cookies.get("userId"),
                           postId: props.match.params.id,
                         });
+                        Mixpanel.track("Liked Post", { poster: data.data.user });
                       }}
                     ></FavoriteBorderIcon>
                   )}
