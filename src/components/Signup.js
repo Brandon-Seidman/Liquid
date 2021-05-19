@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useHistory, withRouter } from "react-router-dom";
 import Cookies from "universal-cookie";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 
 import { Link } from "react-router-dom";
 import {
@@ -53,26 +53,25 @@ const useStyles = makeStyles({
 const Signup = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { values } = useSelector(state => state.form);
-  const { error } = useSelector(state => state.global);
-  const {
-    passwordError,
-    passwordLengthError,
-    usernameTakenError
-  } = useSelector(state => state.signup);
+  const { values } = useSelector((state) => state.form);
+  const { error } = useSelector((state) => state.global);
+  const { passwordError, passwordLengthError, usernameTakenError } =
+    useSelector((state) => state.signup);
   let history = useHistory();
 
   useEffect(() => {
-    dispatch(actions.setValues({
-      username: "",
-      password: "",
-      rePassword: "",
-    }));
+    dispatch(
+      actions.setValues({
+        username: "",
+        password: "",
+        rePassword: "",
+      })
+    );
     dispatch(actions.setError(false));
     dispatch(actions.clearSignupErrors());
   }, []);
 
-  async function HandleLogin(event) {
+  async function HandleSubmit(event) {
     try {
       dispatch(actions.setUsernameTakenError(false));
       if (values.rePassword !== values.password) {
@@ -85,15 +84,27 @@ const Signup = (props) => {
         dispatch(actions.setPasswordError(false));
         return;
       }
-      let signup = await axios.post("http://localhost:4000/users/signup", {
-        data: { username: values.username, password: values.password },
-      });
-      let user = await axios.get(
-        "http://localhost:4000/users/user/" + values.username
-      );
+      let signup = await axios
+        .post("http://localhost:4000/users/signup", {
+          data: { username: values.username, password: values.password },
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
       if (signup.data.username === "added") {
-        cookies.set("userId", user._id);
-        history.push("/");
+        let user = await axios
+          .get("http://localhost:4000/users/user/" + values.username)
+          .catch((err) => {
+            console.log(err);
+          });
+        await cookies.set("userId", user.data._id, { path: "/" });
+        while (1) {
+          if (cookies.get("userId") == user.data._id) {
+            window.location.href = window.location.href;
+            break;
+          }
+        }
       } else if (signup.data.username === "taken") {
         dispatch(actions.setUsernameTakenError(true));
         return;
@@ -137,7 +148,7 @@ const Signup = (props) => {
               onChange={set("password")}
               id="password"
               label="Password"
-			  type="password"
+              type="password"
             />
             <br />
             <br />
@@ -147,12 +158,12 @@ const Signup = (props) => {
               onChange={set("rePassword")}
               id="rePassword"
               label="Re-enter Password"
-			  type="password"
+              type="password"
             />
             <br />
             <br />
             <br />
-            <Button onClick={HandleLogin}>Submit</Button>
+            <Button onClick={HandleSubmit}>Submit</Button>
           </form>
           <Link className="Link" to="/login">
             Already have an account? Login here!

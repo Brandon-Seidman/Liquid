@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 
 import { Link } from "react-router-dom";
 import {
@@ -51,11 +51,14 @@ const useStyles = makeStyles({
 const Login = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { values } = useSelector(state => state.form);
-  const { error } = useSelector(state => state.global);
+  const { values } = useSelector((state) => state.form);
+  const { error } = useSelector((state) => state.global);
   let history = useHistory();
 
   useEffect(() => {
+    if (cookies.get("userId")) {
+      history.push("/");
+    }
     dispatch(actions.setValues({ username: "", password: "" }));
     dispatch(actions.setError(false));
   }, []);
@@ -112,8 +115,8 @@ const Login = (props) => {
               onChange={set("password")}
               id="password"
               label="Password"
-			  type="password"
-			  autoComplete="current-password"
+              type="password"
+              autoComplete="current-password"
             />
             <br />
             <br />
