@@ -85,7 +85,7 @@ const Post = (props) => {
           poster._id
         }`
       );
-      
+
       if (isFriend) {
         Mixpanel.track("Unfriended User", { user: data.data.user });
       } else {
@@ -144,21 +144,21 @@ const Post = (props) => {
 
   const buildCard = (comment) => {
     return (
-	<div className = "full">
-      <Grid item>
-        <Card variant="outlined">
-          <CardContent>
-            <Typography gutterBottom variant="h3" component="h2">
-              {comment.post}
-            </Typography>
-            <Typography gutterBottom variant="h6" component="h3">
-              {comment.description}
-            </Typography>
-            <Typography>Posted By: {comment.commentBy}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-	  </div>
+      <div className="full">
+        <Grid item>
+          <Card variant="outlined">
+            <CardContent>
+              <Typography gutterBottom variant="h3" component="h2">
+                {comment.post}
+              </Typography>
+              <Typography gutterBottom variant="h6" component="h3">
+                {comment.description}
+              </Typography>
+              <Typography>Posted By: {comment.commentBy}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </div>
     );
   };
 
@@ -186,107 +186,117 @@ const Post = (props) => {
           spacing={2}
         >
           <Grid item className={classes.grid} spacing={1}>
-		  <div className = "full">
-            <Grid item>
-              <Card variant="outlined">
-			  <div className = "card">
-                <CardContent>
-				<div className = "title">
-                  <Typography gutterBottom variant="h3" component="h2">
-                    {data.data.title}
-                  </Typography>
-				  </div>
-                  <Typography gutterBottom variant="h6" component="h3">
-                    {data.data.description}
-                  </Typography>
-                  <Typography>
-                    Ingredients Needed:
-                    {data.data.ingredients.map((ingredients) => {
-                      return <li>{ingredients}</li>;
-                    })}
-                  </Typography>
-                  <Typography>Posted By: {data.data.user}</Typography>
-                  <Link onClick={HandleFriend}>
-                    {isFriend ? "Remove Friend" : "Add Friend"}
-                  </Link>
-                  <Typography> {likes} Likes</Typography>
-                  {liked && (
-                    <FavoriteIcon
-                      onClick={async (event) => {
-                        event.preventDefault();
-                        dispatch(actions.setLiked(false));
-                        dispatch(actions.setLikes(likes - 1));
-                        await axios.post("http://localhost:4000/posts/unlike", {
-                          username: data.data.user,
-                          userId: cookies.get("userId"),
-                          postId: props.match.params.id,
-                        });
-                        Mixpanel.track("Unliked Post", { poster: data.data.user });
-                      }}
-                    ></FavoriteIcon>
-                  )}
-                  {!liked && (
-                    <FavoriteBorderIcon
-                      onClick={async (event) => {
-                        event.preventDefault();
-                        dispatch(actions.setLiked(true));
-                        dispatch(actions.setLikes(likes + 1));
-                        await axios.post("http://localhost:4000/posts/like", {
-                          username: data.data.user,
-                          userId: cookies.get("userId"),
-                          postId: props.match.params.id,
-                        });
-                        Mixpanel.track("Liked Post", { poster: data.data.user });
-                      }}
-                    ></FavoriteBorderIcon>
-                  )}
-                  <Typography> {data.data.views} Views</Typography>
-                </CardContent>
-				</div>
-              </Card>
-            </Grid>
-			</div>
-			
+            <div className="full">
+              <Grid item>
+                <Card variant="outlined">
+                  <div className="card">
+                    <CardContent>
+                      <div className="title">
+                        <Typography gutterBottom variant="h3" component="h1">
+                          {data.data.title}
+                        </Typography>
+                      </div>
+                      <Typography gutterBottom variant="h6" component="h2">
+                        {data.data.description}
+                      </Typography>
+                      <Typography>
+                        Ingredients Needed:
+                        {data.data.ingredients.map((ingredients) => {
+                          return <li>{ingredients}</li>;
+                        })}
+                      </Typography>
+                      <Typography>Posted By: {data.data.user}</Typography>
+                      <Link onClick={HandleFriend}>
+                        {isFriend ? "Remove Friend" : "Add Friend"}
+                      </Link>
+                      <Typography> {likes} Likes</Typography>
+                      {liked && (
+                        <FavoriteIcon
+                          onClick={async (event) => {
+                            event.preventDefault();
+                            dispatch(actions.setLiked(false));
+                            dispatch(actions.setLikes(likes - 1));
+                            await axios.post(
+                              "http://localhost:4000/posts/unlike",
+                              {
+                                username: data.data.user,
+                                userId: cookies.get("userId"),
+                                postId: props.match.params.id,
+                              }
+                            );
+                            Mixpanel.track("Unliked Post", {
+                              poster: data.data.user,
+                            });
+                          }}
+                        ></FavoriteIcon>
+                      )}
+                      {!liked && (
+                        <FavoriteBorderIcon
+                          onClick={async (event) => {
+                            event.preventDefault();
+                            dispatch(actions.setLiked(true));
+                            dispatch(actions.setLikes(likes + 1));
+                            await axios.post(
+                              "http://localhost:4000/posts/like",
+                              {
+                                username: data.data.user,
+                                userId: cookies.get("userId"),
+                                postId: props.match.params.id,
+                              }
+                            );
+                            Mixpanel.track("Liked Post", {
+                              poster: data.data.user,
+                            });
+                          }}
+                        ></FavoriteBorderIcon>
+                      )}
+                      <Typography> {data.data.views} Views</Typography>
+                    </CardContent>
+                  </div>
+                </Card>
+              </Grid>
+            </div>
+
             {data.data.comments && card}
 
-			<div className = "full">
-            <Grid item>
-              <Card variant="outlined">
-                <CardContent>
-                  <Typography gutterBottom variant="h3" component="h2">
-                    Write a Comment
-                  </Typography>
-                  <form id="comment-form">
-                    <TextField
-                      value={values.title}
-                      onChange={set("title")}
-                      id="title"
-                      label="Comment Title"
-                    />
-                    <br />
-                    <br />
-                    <br />
-                    <TextField
-                      multiLine
-                      value={values.description}
-                      onChange={set("description")}
-                      id="description"
-                      label="Comment"
-                    />
-                    <br />
-                    <br />
-                    <br />
-                    <Button onClick={HandleSubmit}>Submit</Button>
-                  </form>
-                  {error && (
-                    <Typography className={classes.error}>
-                      There was an error submitting your Comment.
+            <div className="full">
+              <Grid item>
+                <Card variant="outlined">
+                  <CardContent>
+                    <Typography gutterBottom variant="h3" component="h2">
+                      Write a Comment
                     </Typography>
-                  )}
-                </CardContent>
-              </Card>
-            </Grid>
-			</div>
+                    <form id="comment-form">
+                      <TextField
+                        value={values.title}
+                        onChange={set("title")}
+                        id="title"
+                        label="Comment Title"
+                      />
+                      <br />
+                      <br />
+                      <br />
+                      <TextField
+                        multiLine
+                        value={values.description}
+                        onChange={set("description")}
+                        id="description"
+                        label="Comment"
+                      />
+                      <br />
+                      <br />
+                      <br />
+                      <Button onClick={HandleSubmit}>Submit</Button>
+                    </form>
+                    {error && (
+                      <Typography className={classes.error}>
+                        There was an error submitting your Comment.
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Grid>
+            </div>
           </Grid>
         </Grid>
       </div>

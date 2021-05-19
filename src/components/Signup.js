@@ -117,9 +117,9 @@ const Signup = (props) => {
             console.log(err);
           });
         await cookies.set("userId", user.data._id, { path: "/" });
-        Mixpanel.setPerson({ 
+        Mixpanel.setPerson({
           signUpDate: new Date(),
-          USER_ID: user.data.username
+          USER_ID: user.data.username,
         });
         Mixpanel.identify(user.data.username);
         while (1) {
@@ -155,7 +155,7 @@ const Signup = (props) => {
       </Typography>
       <Card variant="outlined" className={classes.loginForm}>
         <CardContent>
-          <Typography gutterBottom variant="h6" component="h3">
+          <Typography gutterBottom variant="h6" component="h2">
             {" "}
             Signup!
           </Typography>

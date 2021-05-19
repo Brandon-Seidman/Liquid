@@ -89,7 +89,7 @@ const Login = (props) => {
           return;
         }
         await cookies.set("userId", user.data._id, { path: "/" });
-        Mixpanel.setPerson({USER_ID: user.data.username});
+        Mixpanel.setPerson({ USER_ID: user.data.username });
         Mixpanel.identify(user.data.username);
         Mixpanel.track("Login", {});
         window.location.href = window.location.href;
@@ -116,7 +116,7 @@ const Login = (props) => {
         </Typography>
         <Card variant="outlined" className={classes.loginForm}>
           <CardContent>
-            <Typography gutterBottom variant="h6" component="h3">
+            <Typography gutterBottom variant="h6" component="h2">
               {" "}
               Login
             </Typography>

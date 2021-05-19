@@ -32,16 +32,15 @@
 }
 
 .links {
-	color: white;
-	display: inline-block;
-	width: 16%;
-	text-align:center;
-	font-weight:10px;
+  color: #282c34;
+  display: inline-block;
+  width: 16%;
+  text-align: center;
+  font-weight: 10px;
 }
 
-.links:hover
-{
-	color: white;
+.links:hover {
+  color: #282c34;
 }
 @keyframes App-logo-spin {
   from {

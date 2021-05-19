@@ -1,13 +1,13 @@
-.card{
-	background-color:lightblue;
+.card {
+  background-color: lightblue;
 }
 
-.full{
-	padding:5px;
-	width:50%;
-	margin: 0 auto;
+.full {
+  padding: 5px;
+  width: 50%;
+  margin: 0 auto;
 }
 
-.title{
-	color: white;
+.title {
+  color: #282c34;
 }

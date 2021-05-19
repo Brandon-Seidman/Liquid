@@ -41,7 +41,7 @@ const useStyles = makeStyles({
   },
   grid: {
     flexGrow: 2,
-    flexDirection: "row"
+    flexDirection: "row",
   },
 });
 const Home = (props) => {
@@ -92,40 +92,40 @@ const Home = (props) => {
 
   const buildCard = (post) => {
     return (
-	<div className = "full">
-      <Grid item>
-        <Card variant="outlined">
-          <CardActionArea
-            onClick={(event) => {
-              history.push("/post/" + post._id);
-              Mixpanel.track("View Post", { poster: post.user });
-            }}
-          >
-		  <div className = "card">
-            <CardContent>
-			<div className = "title">
-              <Typography gutterBottom variant="h3" component="h2">
-                {post.title}
-              </Typography>
-			  </div>
-              <Typography gutterBottom variant="h6" component="h3">
-                {post.description}
-              </Typography>
-              <Typography>
-                Ingredients Needed:
-                {post.ingredients.map((ingredients) => {
-                  return <li>{ingredients}</li>;
-                })}
-              </Typography>
-              <Typography>Posted By: {post.user}</Typography>
-              <Typography>{post.likes} likes</Typography>
-              <Typography>{post.views || 0} views</Typography>
-            </CardContent>
-			</div>
-          </CardActionArea>
-        </Card>
-      </Grid>
-	  </div>
+      <div className="full">
+        <Grid item>
+          <Card variant="outlined">
+            <CardActionArea
+              onClick={(event) => {
+                history.push("/post/" + post._id);
+                Mixpanel.track("View Post", { poster: post.user });
+              }}
+            >
+              <div className="card">
+                <CardContent>
+                  <div className="title">
+                    <Typography gutterBottom variant="h3" component="h1">
+                      {post.title}
+                    </Typography>
+                  </div>
+                  <Typography gutterBottom variant="h6" component="h2">
+                    {post.description}
+                  </Typography>
+                  <Typography>
+                    Ingredients Needed:
+                    {post.ingredients.map((ingredients) => {
+                      return <li>{ingredients}</li>;
+                    })}
+                  </Typography>
+                  <Typography>Posted By: {post.user}</Typography>
+                  <Typography>{post.likes} likes</Typography>
+                  <Typography>{post.views || 0} views</Typography>
+                </CardContent>
+              </div>
+            </CardActionArea>
+          </Card>
+        </Grid>
+      </div>
     );
   };
   let card = {};
