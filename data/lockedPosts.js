@@ -32,7 +32,7 @@ let exportedMethods = {
       description: description,
       points: points,
       ingredients: ingredients,
-      unlocked: false,
+      unlocked: [],
       _id: uuid.v4(),
     };
 
@@ -55,6 +55,7 @@ let exportedMethods = {
     if (typeof description !== "string") throw "description must be a string";
     if (typeof title !== "string") throw "title must be a string";
     if (!Array.isArray(ingredients)) throw "ingredients must be a array";
+    if (!Array.isArray(unlocked)) throw "unlocked must be an array";
     if (isNaN(points)) throw "points must be a number";
 
     const postUpdateInfo = {
@@ -75,14 +76,15 @@ let exportedMethods = {
 
     return await this.getPostById(id);
   },
-  async unlockPost(id) {
+  async unlockPost(id, userid) {
     const post = await this.getPostById(id);
+    post.unlocked.push(userid);
     const postUpdateInfo = {
       title: post.title,
       description: post.description,
       points: post.points,
       ingredients: post.ingredients,
-      unlocked: true,
+      unlocked: post.unlocked,
     };
     const postCollection = await lockedPosts();
     const updateInfo = await postCollection.updateOne(

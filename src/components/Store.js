@@ -39,6 +39,8 @@ const useStyles = makeStyles({
   },
   error: {
     color: "red",
+    marginLeft: 400,
+    fontSize: 44,
   },
 });
 const cookies = new Cookies();
@@ -58,7 +60,9 @@ const Store = (props) => {
   useEffect(() => {
     async function getData() {
       dispatch(actions.setLoading(true));
+
       let newData = await axios.get("http://localhost:4000/posts/lockedPosts");
+      console.log(newData);
       dispatch(actions.setData(newData));
       dispatch(actions.setLoading(false));
     }
@@ -84,7 +88,7 @@ const Store = (props) => {
     return (
       <div className="full">
         <Grid item>
-          {post.unlocked && (
+          {post.unlocked.includes(cookies.get("userId")) && (
             <Card variant="outlined">
               <div className="card">
                 <CardContent>
@@ -107,7 +111,7 @@ const Store = (props) => {
               </div>
             </Card>
           )}
-          {!post.unlocked && (
+          {!post.unlocked.includes(cookies.get("userId")) && (
             <Card variant="outlined">
               <div className="card">
                 <CardContent>
@@ -124,11 +128,6 @@ const Store = (props) => {
                   <Button onClick={() => handleUnlock(post._id)}>
                     Unlock Now!
                   </Button>
-                  {error && (
-                    <Typography className={classes.error}>
-                      Insufficient funds :({" "}
-                    </Typography>
-                  )}
                   <Typography>Posted By: Liquid Guru</Typography>
                 </CardContent>
               </div>
@@ -163,6 +162,11 @@ const Store = (props) => {
   } else {
     return (
       <div className={classes.postBody}>
+        {error && (
+          <Typography className={classes.error}>
+            Insufficient funds :({" "}
+          </Typography>
+        )}
         <Grid
           container
           direction="row"
