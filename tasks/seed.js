@@ -28,7 +28,7 @@ async function main() {
     "ihavesomanyprojects"
   );
   await create("scottrocks@gmail.com", "scottrocks", "imchillin");
-  await create("liquidappteam@gmail.com", "brandyman", "metoo");
+  await create("liquidappteam@gmail.com", "brandyman", "metooo");
   await create("jasonscool@gmail.com", "jasonscool", "yeahyousuckshannon");
   await create("jodycourtois@gmail.com", "jodycourtois", "pancake");
   await create("bretsteiner@gmail.com", "bretsteiner", "pancakewithsyrup");
@@ -125,6 +125,15 @@ async function main() {
     ]
   );
   await lockedPostData.addpost(
+    "The Patrick Hill",
+    "A simple mix of apple juice and vodka.",
+    [
+      "2 ounces vodka",
+      "Top off with apple juice",
+    ],
+    1
+  );
+  await lockedPostData.addpost(
     "Watermelon Refresher",
     "*For the watermelon-strawberry juice, blend equal amounts (by weight) of watermelon and strawberries. Strain the juice through a fine-mesh strainer into a pitcher or large measuring cup and refrigerate until needed. \n  For the Basil-Ginger Simple Syrup, you'll need 1 cup water, 1 cup sugar, 1 two-inch piece of ginger, peeled and thinly sliced, Handful of fresh basil.In a medium saucepan, heat the water and sugar over medium heat until the sugar is completely dissolved. Add the ginger and basil, and immediately remove from heat, allowing it to steep until cool. Strain the syrup into a jar through a fine-mesh strainer and refrigerate. Yields approximately one cup of syrup, and will keep refrigerated for two to three weeks. \n Add all ingredients to an ice filled shaker glass.\n Shake and strain over fresh ice in a festive glass.\n https://www.stylemepretty.com/2014/06/04/signature-cocktail-summer-watermelon-refresher/",
     [
@@ -134,6 +143,18 @@ async function main() {
       "lime juice",
     ],
     11
+  );
+  await lockedPostData.addpost(
+    "Berry Rose Mojito",
+    "In a small bowl, muddle together strawberries, juice from half a lime and 1 teaspoon of sugar.\n Muddle mint and remaining sugar in the bottom of a highball glass.\n Add ice and strawberry mixture to a cocktail shaker. Pour in Rosé.\n Shake until cold. Pour through strainer into glass. Garnish with lime and mint. \n https://www.hgtv.com/design/design-blog/entertaining/berry-rose-mojito-recipe",
+    [
+      "3 strawberries, sliced",
+      "half a lime, plus other half for garnish",
+      "6-8 mint leaves",
+      "2 teaspoons of sugar",
+      "6 ounces sparkling rosé",
+    ],
+    15
   );
   await lockedPostData.addpost(
     "A Christmas Mint Julep",
@@ -148,18 +169,6 @@ async function main() {
       "5 mint leaves",
     ],
     50
-  );
-  await lockedPostData.addpost(
-    "Berry Rose Mojito",
-    "In a small bowl, muddle together strawberries, juice from half a lime and 1 teaspoon of sugar.\n Muddle mint and remaining sugar in the bottom of a highball glass.\n Add ice and strawberry mixture to a cocktail shaker. Pour in Rosé.\n Shake until cold. Pour through strainer into glass. Garnish with lime and mint. \n https://www.hgtv.com/design/design-blog/entertaining/berry-rose-mojito-recipe",
-    [
-      "3 strawberries, sliced",
-      "half a lime, plus other half for garnish",
-      "6-8 mint leaves",
-      "2 teaspoons of sugar",
-      "6 ounces sparkling rosé",
-    ],
-    15
   );
   await lockedPostData.addpost(
     "Lazy Sunday Mimosa",
