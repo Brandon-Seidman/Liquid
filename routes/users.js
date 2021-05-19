@@ -11,7 +11,7 @@ router.use(express.json());
 router.get("/user/:username", async (req, res) => {
   try {
     if (!req.params.username || !req.params.username.trim()) {
-      throw "Error: No username received";
+      return res.status(404).json({ error: "No username received " });
     }
     let data = await userData.getUserByUsername(req.params.username);
 
@@ -123,7 +123,12 @@ router.post("/friend/:activeUser/:targetUser", async (req, res) => {
   try {
     const activeUserId = req.params.activeUser;
     const targetUserId = req.params.targetUser;
-    if (!activeUserId || !activeUserId.trim() || !targetUserId || !targetUserId.trim()) {
+    if (
+      !activeUserId ||
+      !activeUserId.trim() ||
+      !targetUserId ||
+      !targetUserId.trim()
+    ) {
       return res.status(400).json({ error: "Invalid UserId" });
     }
 
@@ -133,7 +138,9 @@ router.post("/friend/:activeUser/:targetUser", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    let newFriendsList = activeUser.friendList.filter(id => id !== targetUserId);
+    let newFriendsList = activeUser.friendList.filter(
+      (id) => id !== targetUserId
+    );
     newFriendsList.push(targetUserId);
 
     const result = await userData.updateUser(
@@ -157,7 +164,12 @@ router.post("/unfriend/:activeUser/:targetUser", async (req, res) => {
   try {
     const activeUserId = req.params.activeUser;
     const targetUserId = req.params.targetUser;
-    if (!activeUserId || !activeUserId.trim() || !targetUserId || !targetUserId.trim()) {
+    if (
+      !activeUserId ||
+      !activeUserId.trim() ||
+      !targetUserId ||
+      !targetUserId.trim()
+    ) {
       return res.status(400).json({ error: "Invalid UserId" });
     }
 
@@ -167,7 +179,9 @@ router.post("/unfriend/:activeUser/:targetUser", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    let newFriendsList = activeUser.friendList.filter(id => id !== targetUserId);
+    let newFriendsList = activeUser.friendList.filter(
+      (id) => id !== targetUserId
+    );
 
     const result = await userData.updateUser(
       activeUser._id,
