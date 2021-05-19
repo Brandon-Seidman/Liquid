@@ -64,7 +64,7 @@ router.post("/signup", async (req, res) => {
       if (users[i].username.toLowerCase() === username)
         return res.status(200).json({ username: "taken" });
     }
-    let user = create(username, password);
+    let user = await create(username, password);
     if (!user) {
       return res
         .status(404)

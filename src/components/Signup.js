@@ -92,13 +92,12 @@ const Signup = (props) => {
           console.log(err);
         });
 
-      console.log(values.username);
-      let user = await axios
-        .get("http://localhost:4000/users/user/" + values.username)
-        .catch((err) => {
-          console.log(err);
-        });
       if (signup.data.username === "added") {
+        let user = await axios
+          .get("http://localhost:4000/users/user/" + values.username)
+          .catch((err) => {
+            console.log(err);
+          });
         cookies.set("userId", user._id);
         history.push("/");
       } else if (signup.data.username === "taken") {
