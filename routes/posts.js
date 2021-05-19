@@ -101,6 +101,19 @@ router.post("/unlike", async (req, res) => {
     res.status(500).json({ error: e });
   }
 });
+router.post("/addView", async (req, res) => {
+  try {
+    const post = await postData.addView(req.body.postId);
+
+    if (!post) {
+      return res.status(404).json("Post not found");
+    }
+    return res.status(200);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({ error: e });
+  }
+});
 router.post("/liked", async (req, res) => {
   try {
     const data = await userData.getUserById(req.body.userId);
