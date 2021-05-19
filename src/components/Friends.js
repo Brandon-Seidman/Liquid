@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import actions from "../actions";
 import "../App.css";
 import axios from "axios";
+import Mixpanel from "../mixpanel";
 
 import {
   Card,
@@ -75,7 +76,10 @@ const Friends = (props) => {
       <Grid item>
         <Card variant="outlined">
           <CardActionArea
-            onClick={(event) => history.push("/post/" + post._id)}
+            onClick={(event) => {
+              history.push("/post/" + post._id);
+              Mixpanel.track("View Friend's Post", { friend: post.user });
+            }}
           >
 		  <div className = "card">
             <CardContent>

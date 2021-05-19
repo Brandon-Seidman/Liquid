@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import actions from "../actions";
 import "../App.css";
 import axios from "axios";
+import Mixpanel from "../mixpanel";
 import "./Cards.css";
 import {
   Card,
@@ -95,7 +96,10 @@ const Home = (props) => {
       <Grid item>
         <Card variant="outlined">
           <CardActionArea
-            onClick={(event) => history.push("/post/" + post._id)}
+            onClick={(event) => {
+              history.push("/post/" + post._id);
+              Mixpanel.track("View Post", { poster: post.user });
+            }}
           >
 		  <div className = "card">
             <CardContent>

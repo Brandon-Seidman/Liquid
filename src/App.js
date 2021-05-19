@@ -14,17 +14,22 @@ import Chat from "./components/Chat";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
+import Mixpanel from "./mixpanel";
 
 const App = () => {
   let history = useHistory();
   const cookies = new Cookies();
+
+  const HandleNavigate = destination => {
+    Mixpanel.track("Navigate", { destination: destination });
+  }
   
   if (cookies.get("userId")) {
     return (
       <Router>
         <div className="header">
           <header>
-            <CardActionArea href= "/">
+            <CardActionArea href= "/" onClick={() => HandleNavigate("Home")}>
                 <img
                   src="liquidLogoSmall.png"
                   height="100px"
@@ -38,6 +43,7 @@ const App = () => {
               onClick={(event) => {
                 event.preventDefault();
                 cookies.remove("userId", { path: "/" });
+                Mixpanel.track("Logout", {});
                 window.location.href = "/";
               }}
             >
@@ -46,30 +52,30 @@ const App = () => {
 			</div>
 			
 			<div className="links">
-            <CardActionArea href="/my-page">
+            <CardActionArea href="/my-page" onClick={() => HandleNavigate("MyPage")}>
               <CardContent> My Page </CardContent>
             </CardActionArea>
 			</div>
 
 			<div className="links">
-            <CardActionArea href="/friends">
+            <CardActionArea href="/friends" onClick={() => HandleNavigate("Friends")}>
               <CardContent> Friends' Posts </CardContent>
             </CardActionArea>
 			</div>
 			
-			<div className="links">
+			<div className="links" onClick={() => HandleNavigate("Store")}>
             <CardActionArea href="/store">
               <CardContent> Liquid Store </CardContent>
             </CardActionArea>
 			</div>
 			
-			<div className="links">
+			<div className="links" onClick={() => HandleNavigate("Post")}>
             <CardActionArea href="/post">
               <CardContent> Post a Liquid! </CardContent>
             </CardActionArea>
 			</div>
 			
-			<div className="links">
+			<div className="links" onClick={() => HandleNavigate("Chat")}>
             <CardActionArea href="/chat">
               <CardContent> Chat </CardContent>
             </CardActionArea>
