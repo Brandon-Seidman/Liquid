@@ -43,6 +43,8 @@ const useStyles = makeStyles({
   loginForm: {
     maxWidth: 300,
     justifyContent: "center",
+    marginBottom: 50,
+    marginLeft: 115,
   },
   error: {
     color: "red",
@@ -90,50 +92,52 @@ const Login = (props) => {
   };
 
   return (
-    <div className={classes.loginBody}>
-      <Typography gutterBottom variant="h2" component="h1">
-        Welcome back to Liquid!
-      </Typography>
-      <Card variant="outlined" className={classes.loginForm}>
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="h3">
-            {" "}
-            Login
-          </Typography>
-          <form id="login-form">
-            <TextField
-              value={values.username}
-              onChange={set("username")}
-              id="username"
-              label="Username"
-            />
-            <br />
-            <br />
-            <br />
-            <TextField
-              value={values.password}
-              onChange={set("password")}
-              id="password"
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-            />
-            <br />
-            <br />
-            <br />
-
-            <Button onClick={HandleLogin}>Submit</Button>
-          </form>
-          <Link className="Link" to="/signup">
-            Don't have an account yet? Sign up here!
-          </Link>
-          {error && (
-            <Typography className={classes.error}>
-              Invalid Username or Password
+    <div>
+      <div className={classes.loginBody}>
+        <Typography gutterBottom variant="h2" component="h1">
+          Welcome back to Liquid!
+        </Typography>
+        <Card variant="outlined" className={classes.loginForm}>
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="h3">
+              {" "}
+              Login
             </Typography>
-          )}
-        </CardContent>
-      </Card>
+            <form id="login-form">
+              <TextField
+                value={values.username}
+                onChange={set("username")}
+                id="username"
+                label="Username"
+              />
+              <br />
+              <br />
+              <br />
+              <TextField
+                value={values.password}
+                onChange={set("password")}
+                id="password"
+                label="Password"
+                type="password"
+                autoComplete="current-password"
+              />
+              <br />
+              <br />
+              <br />
+
+              <Button onClick={HandleLogin}>Submit</Button>
+            </form>
+            <Link className="Link" to="/signup">
+              Don't have an account yet? Sign up here!
+            </Link>
+            {error && (
+              <Typography className={classes.error}>
+                Invalid Username or Password
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

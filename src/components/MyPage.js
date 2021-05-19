@@ -3,15 +3,15 @@ import { useHistory } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 import {
   Card,
   CardActionArea,
   CardContent,
   Grid,
   Typography,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 
 const cookies = new Cookies();
@@ -29,6 +29,9 @@ const useStyles = makeStyles({
 
     borderRadius: 6,
   },
+  postBody: {
+    margin: 10,
+  },
   grid: {
     flexGrow: 2,
     flexDirection: "row",
@@ -37,8 +40,8 @@ const useStyles = makeStyles({
 const MyPage = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { data, loading } = useSelector(state => state.global);
-  const { userData } = useSelector(state => state.user);
+  const { data, loading } = useSelector((state) => state.global);
+  const { userData } = useSelector((state) => state.user);
   let history = useHistory();
 
   useEffect(() => {
@@ -61,7 +64,9 @@ const MyPage = (props) => {
     return (
       <Grid item>
         <Card variant="outlined">
-          <CardActionArea  onClick={(event) => history.push("/post/" + post._id)}>
+          <CardActionArea
+            onClick={(event) => history.push("/post/" + post._id)}
+          >
             <CardContent>
               <Typography gutterBottom variant="h3" component="h2">
                 {post.title}
@@ -90,9 +95,15 @@ const MyPage = (props) => {
       return buildCard(posts);
     });
   }
-  if (loading || !data || !data.data || !Array.isArray(data.data) || !userData) {
+  if (
+    loading ||
+    !data ||
+    !data.data ||
+    !Array.isArray(data.data) ||
+    !userData
+  ) {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"
@@ -107,7 +118,7 @@ const MyPage = (props) => {
     );
   } else {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"

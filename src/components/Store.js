@@ -3,8 +3,8 @@ import { useHistory } from "react-router-dom";
 import "../App.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 
 import {
   Card,
@@ -29,6 +29,9 @@ const useStyles = makeStyles({
 
     borderRadius: 6,
   },
+  postBody: {
+    margin: 10,
+  },
   grid: {
     flexGrow: 2,
     flexDirection: "row",
@@ -42,8 +45,8 @@ const cookies = new Cookies();
 const Store = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector(state => state.global);
-  const { unlock } = useSelector(state => state.store);
+  const { data, loading, error } = useSelector((state) => state.global);
+  const { unlock } = useSelector((state) => state.store);
   let history = useHistory();
 
   useEffect(() => {
@@ -129,9 +132,9 @@ const Store = (props) => {
     });
   }
 
-  if (loading || !data ||!data.data || !Array.isArray(data.data)) {
+  if (loading || !data || !data.data || !Array.isArray(data.data)) {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"
@@ -145,7 +148,7 @@ const Store = (props) => {
     );
   } else {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"

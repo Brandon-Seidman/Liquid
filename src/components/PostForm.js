@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import Cookies from "universal-cookie";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 import {
   Card,
   CardContent,
@@ -36,13 +36,15 @@ const useStyles = makeStyles({
   liquidBody: {
     height: "auto",
     marginTop: 10,
-    marginLeft: 500,
+    marginLeft: 400,
     justifyContent: "center",
     alignItems: "center",
   },
   liquidForm: {
     maxWidth: 300,
     justifyContent: "center",
+    marginBottom: 50,
+    marginLeft: 50,
   },
   error: {
     color: "red",
@@ -52,21 +54,26 @@ const useStyles = makeStyles({
 const PostForm = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { values } = useSelector(state => state.form);
-  const { ingredientFields } = useSelector(state => state.postForm);
-  const { error } = useSelector(state => state.global);
+  const { values } = useSelector((state) => state.form);
+  const { ingredientFields } = useSelector((state) => state.postForm);
+  const { error } = useSelector((state) => state.global);
   let history = useHistory();
 
   async function HandleSubmit(event) {
     try {
-      const ingredients = values.ingredients.filter(ingredient => !!ingredient.trim())
+      const ingredients = values.ingredients.filter(
+        (ingredient) => !!ingredient.trim()
+      );
       let result = await axios.post("http://localhost:4000/posts/post", {
         userId: cookies.get("userId"),
         title: values.title.trim(),
         description: values.description.trim(),
-        ingredients: ingredients
+        ingredients: ingredients,
       });
-      window.location.href = window.location.href.slice(0, window.location.href.length-4);
+      window.location.href = window.location.href.slice(
+        0,
+        window.location.href.length - 4
+      );
     } catch (e) {
       console.log(e);
       dispatch(actions.setError(true));
@@ -80,11 +87,11 @@ const PostForm = (props) => {
   };
 
   const setIngredient = (index) => {
-      return ({ target: {value} }) => {
-          let new_ingredients = [...values.ingredients];
-          new_ingredients[index] = value;
-          dispatch(actions.updateValue("ingredients", new_ingredients));
-      };
+    return ({ target: { value } }) => {
+      let new_ingredients = [...values.ingredients];
+      new_ingredients[index] = value;
+      dispatch(actions.updateValue("ingredients", new_ingredients));
+    };
   };
 
   const addIngredientField = () => {
@@ -99,13 +106,16 @@ const PostForm = (props) => {
         onChange={setIngredient(new_ingredients.length - 1)}
         id={`ingredient-field-${ingredientFields.length + 1}`}
         label={`Ingredient ${ingredientFields.length + 1}`}
-      />)
+      />
+    );
     dispatch(actions.setIngredientFields(new_ingredient_fields));
-  }
+  };
 
   useEffect(() => {
     dispatch(actions.setError(false));
-    dispatch(actions.setValues({ title: "", description: "", ingredients: [] }));
+    dispatch(
+      actions.setValues({ title: "", description: "", ingredients: [] })
+    );
     dispatch(actions.setIngredientFields([]));
   }, []);
 

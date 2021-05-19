@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import "../App.css";
 import axios from "axios";
 import Cookies from "universal-cookie";
-import { useSelector, useDispatch } from 'react-redux';
-import actions from '../actions';
+import { useSelector, useDispatch } from "react-redux";
+import actions from "../actions";
 
 import {
   Card,
@@ -13,7 +13,7 @@ import {
   makeStyles,
   Button,
   TextField,
-  Link
+  Link,
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -34,29 +34,37 @@ const useStyles = makeStyles({
 
     borderRadius: 6,
   },
+  postBody: {
+    margin: 10,
+  },
   grid: {
     flexGrow: 2,
     flexDirection: "row",
   },
   error: {
     color: "red",
-  }
+  },
 });
 const Post = (props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector(state => state.global);
-  const { liked, likes, isFriend } = useSelector(state => state.post);
-  const { values } = useSelector(state => state.form);
+  const { data, loading, error } = useSelector((state) => state.global);
+  const { liked, likes, isFriend } = useSelector((state) => state.post);
+  const { values } = useSelector((state) => state.form);
 
   async function HandleSubmit(event) {
     try {
-      let user = (await axios.get(`http://localhost:4000/users/${cookies.get("userId")}`)).data;
-      let result = await axios.post(`http://localhost:4000/posts/comment/${props.match.params.id}`, {
-        commentBy: user.username,
-        title: values.title.trim(),
-        description: values.description.trim()
-      });
+      let user = (
+        await axios.get(`http://localhost:4000/users/${cookies.get("userId")}`)
+      ).data;
+      let result = await axios.post(
+        `http://localhost:4000/posts/comment/${props.match.params.id}`,
+        {
+          commentBy: user.username,
+          title: values.title.trim(),
+          description: values.description.trim(),
+        }
+      );
       window.location.href = window.location.href;
     } catch (e) {
       console.log(e);
@@ -66,9 +74,15 @@ const Post = (props) => {
 
   async function HandleFriend(event) {
     try {
-      const poster = (await axios.get(`http://localhost:4000/users/user/${data.data.user}`)).data;
+      const poster = (
+        await axios.get(`http://localhost:4000/users/user/${data.data.user}`)
+      ).data;
       const action = isFriend ? "unfriend" : "friend";
-      await axios.post(`http://localhost:4000/users/${action}/${cookies.get("userId")}/${poster._id}`);
+      await axios.post(
+        `http://localhost:4000/users/${action}/${cookies.get("userId")}/${
+          poster._id
+        }`
+      );
       dispatch(actions.setIsFriend(!isFriend));
     } catch (e) {
       console.log(e);
@@ -89,7 +103,7 @@ const Post = (props) => {
     async function getPostData() {
       dispatch(actions.setLoading(true));
       axios.post("http://localhost:4000/posts/addView", {
-        postId: props.match.params.id
+        postId: props.match.params.id,
       });
       let newData = await axios.get(
         "http://localhost:4000/posts/" + props.match.params.id
@@ -105,7 +119,11 @@ const Post = (props) => {
         "http://localhost:4000/users/user/" + newData.data.user
       );
 
-      dispatch(actions.setIsFriend(userData.data.friendList.includes(posterData.data._id)));
+      dispatch(
+        actions.setIsFriend(
+          userData.data.friendList.includes(posterData.data._id)
+        )
+      );
       dispatch(actions.setData(newData));
       dispatch(actions.setLikes(newData.data.likes));
       dispatch(actions.setLiked(likeData.data.liked));
@@ -142,13 +160,13 @@ const Post = (props) => {
 
   if (loading || !data || !data.data || !data.data.comments || liked === null) {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <div>Loading...</div>
       </div>
     );
   } else {
     return (
-      <div className="postsBody">
+      <div className={classes.postBody}>
         <Grid
           container
           direction="row"
@@ -173,14 +191,16 @@ const Post = (props) => {
                     })}
                   </Typography>
                   <Typography>Posted By: {data.data.user}</Typography>
-                  <Link onClick={HandleFriend}>{isFriend ? "Remove Friend" : "Add Friend"}</Link>
+                  <Link onClick={HandleFriend}>
+                    {isFriend ? "Remove Friend" : "Add Friend"}
+                  </Link>
                   <Typography> {likes} Likes</Typography>
                   {liked && (
                     <FavoriteIcon
                       onClick={async (event) => {
                         event.preventDefault();
                         dispatch(actions.setLiked(false));
-                        dispatch(actions.setLikes(likes-1));
+                        dispatch(actions.setLikes(likes - 1));
                         await axios.post("http://localhost:4000/posts/unlike", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
@@ -194,7 +214,7 @@ const Post = (props) => {
                       onClick={async (event) => {
                         event.preventDefault();
                         dispatch(actions.setLiked(true));
-                        dispatch(actions.setLikes(likes+1));
+                        dispatch(actions.setLikes(likes + 1));
                         await axios.post("http://localhost:4000/posts/like", {
                           username: data.data.user,
                           userId: cookies.get("userId"),
@@ -212,7 +232,7 @@ const Post = (props) => {
               <Card variant="outlined">
                 <CardContent>
                   <Typography gutterBottom variant="h3" component="h2">
-                  Write a Comment
+                    Write a Comment
                   </Typography>
                   <form id="comment-form">
                     <TextField
@@ -224,7 +244,7 @@ const Post = (props) => {
                     <br />
                     <br />
                     <br />
-                    <TextField 
+                    <TextField
                       multiLine
                       value={values.description}
                       onChange={set("description")}
